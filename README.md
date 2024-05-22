@@ -1,4 +1,4 @@
-StellarIO
+# StellarIO
 A modern, pure browser-based real-time strategy game/space simulation in a Sci-Fi space setting. Build your empire. Colonize unknown planets. Forge allies. Fight for glory and control.
 
 ## Concept
