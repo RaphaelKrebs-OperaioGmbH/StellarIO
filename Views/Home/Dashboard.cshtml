@@ -1,0 +1,32 @@
+﻿@model IEnumerable<StellarIO.Models.Planet>
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to your Dashboard</h1>
+    <p>Manage your planets and resources here.</p>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <h2>Your Planets</h2>
+    <ul>
+        @foreach (var planet in Model)
+        {
+            <li>
+                <h3>@planet.Name</h3>
+                <p>Iron: @planet.Iron</p>
+                <p>Silver: @planet.Silver</p>
+                <p>Aluminium: @planet.Aluminium</p>
+                <p>H2: @planet.H2</p>
+                <p>Energy: @planet.Energy</p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>You have no planets yet.</p>
+}

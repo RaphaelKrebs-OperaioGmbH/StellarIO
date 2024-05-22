@@ -1,0 +1,64 @@
+﻿@model GalaxyViewModel
+
+<link rel="stylesheet" href="~/css/galaxy.css" />
+
+<h2>@Model.Name</h2>
+
+<div id="system-container" class="system-container">
+    <!-- System content will be dynamically loaded here -->
+</div>
+
+<div class="navigation-buttons">
+    <button onclick="previousSystem()">Previous</button>
+    <button onclick="nextSystem()">Next</button>
+</div>
+
+<div id="planet-details" style="display:none;">
+    <h3 id="planet-name"></h3>
+    <p>Owner: <span id="planet-owner"></span></p>
+    <p>Coordinates: <span id="planet-coordinates"></span></p>
+</div>
+
+@section Scripts {
+    <script>
+        var systems = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Systems));
+        var currentIndex = 0;
+
+        function loadSystem(index) {
+            var system = systems[index];
+            var systemContainer = document.getElementById('system-container');
+            systemContainer.innerHTML = `
+                <h3>System ${system.Id}</h3>
+                <div class="orbit">
+                    <div class="sun"></div>
+                    ${system.Planets.map((planet, i) => `
+                        <div class="planet" onclick="showPlanetDetails('${planet.Name}', '${planet.Owner}', '${planet.Coordinates}')" 
+                            style="transform: translate(-50%, -50%) rotate(${i * (360 / system.Planets.length)}deg) translate(150px) rotate(-${i * (360 / system.Planets.length)}deg);">
+                            <span>${planet.Name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function previousSystem() {
+            currentIndex = (currentIndex - 1 + systems.length) % systems.length;
+            loadSystem(currentIndex);
+        }
+
+        function nextSystem() {
+            currentIndex = (currentIndex + 1) % systems.length;
+            loadSystem(currentIndex);
+        }
+
+        function showPlanetDetails(name, owner, coordinates) {
+            document.getElementById('planet-name').innerText = name;
+            document.getElementById('planet-owner').innerText = owner;
+            document.getElementById('planet-coordinates').innerText = coordinates;
+            document.getElementById('planet-details').style.display = 'block';
+        }
+
+        // Initial load
+        loadSystem(currentIndex);
+    </script>
+}
