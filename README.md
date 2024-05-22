@@ -1,28 +1,4 @@
-# MVP Functionality
-
-## Preseeded User
-- A user called `testuser` with password `test` is preseeded in the database.
-- This user has 3 planets and an HQ level 1 on each planet.
-
-## User Model
-- The MVP features the existing model, with necessary alterations for Authentication (e.g., additional properties for the User Class).
-
-## User Registration and Authentication
-### User Registration
-- A user can register with Email, Username, and Password.
-  - If registration fails, an appropriate error message is displayed.
-  - If registration is successful, a success message is displayed.
-
-### User Login
-- A registered user can log in with Email and Password.
-  - If authentication fails, an appropriate error message is displayed.
-  - If authentication is successful, a message "Loading HQ..." is displayed for 3 seconds.
-  - After "Loading HQ", the user is presented with an overview of their planets and resources.
-
-## Resource Generation
-- The resource generation has to work properly.
-
-# Game Description: StellarIO
+StellarIO
 A modern, pure browser-based real-time strategy game/space simulation in a Sci-Fi space setting. Build your empire. Colonize unknown planets. Forge allies. Fight for glory and control.
 
 ## Concept
@@ -125,3 +101,16 @@ Different propulsion has different speeds regarding their targets.
 - **Transitorialdrive**: In same system min flight time: 2.5 hours, next neighbor system: 5 hours
 
 - Duration of a flight increases if the targeted planet is further away (based on coordinates).
+
+# MVP Functionality
+- A user called `testuser` with password `test` is preseeded in the database.
+- This user has 3 planets and an HQ level 1 on each planet.
+- The MVP features the existing model, with necessary alterations for Authentication (e.g., additional properties for the User Class).
+- A user can register with Email, Username, and Password.
+  - If registration fails, an appropriate error message is displayed.
+  - If registration is successful, a success message is displayed.
+- A registered user can log in with Email and Password.
+  - If authentication fails, an appropriate error message is displayed.
+  - If authentication is successful, a message "Loading HQ..." is displayed for 3 seconds.
+  - After "Loading HQ", the user is presented with an overview of their planets and resources.
+- The resource generation has to work properly.
