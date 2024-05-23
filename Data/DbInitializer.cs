@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using StellarIO.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 public class DbInitializer
 {
@@ -59,26 +64,40 @@ public class DbInitializer
         // Create test user and assign planets
         var testUser = new User { UserName = "testuser", Email = "testuser@example.com" };
         var result = await userManager.CreateAsync(testUser, "Test@2018!");
+
         if (result.Succeeded)
         {
             logger.LogInformation("Test user created successfully.");
 
-            var userPlanets = context.Planets.OrderBy(p => rng.Next()).Take(3).ToList();
-            foreach (var planet in userPlanets)
+            // Assign three planets to test user
+            var availablePlanets = context.Planets.Where(p => p.UserId == null).Take(3).ToList();
+            foreach (var planet in availablePlanets)
             {
                 planet.UserId = testUser.Id;
                 planet.User = testUser;
-            }
-            await context.SaveChangesAsync();
+                context.Planets.Update(planet);
 
-            logger.LogInformation("Assigned 3 planets to test user.");
+                // Add HQ building to each planet
+                var hq = new Building
+                {
+                    Name = "HQ",
+                    Level = 1,
+                    PlanetId = planet.Id,
+                    IronCost = 300,
+                    SilverCost = 100,
+                    AluminiumCost = 150,
+                    H2Cost = 90,
+                    EnergyCost = 90,
+                    Points = 0
+                };
+                context.Buildings.Add(hq);
+            }
+            context.SaveChanges();
+            logger.LogInformation("Three planets assigned to test user.");
         }
         else
         {
-            foreach (var error in result.Errors)
-            {
-                logger.LogError("Error creating test user: {Error}", error.Description);
-            }
+            logger.LogError("Failed to create test user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
         }
     }
 }

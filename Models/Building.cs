@@ -15,6 +15,7 @@ namespace StellarIO.Models
         public int H2Cost { get; set; }
         public int EnergyCost { get; set; }
         public int Points { get; set; }
+        public DateTime? ConstructionEndTime { get; set; }
     }
 
 }

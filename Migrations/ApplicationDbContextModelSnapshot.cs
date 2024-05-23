@@ -169,6 +169,9 @@ namespace StellarIO.Migrations
                     b.Property<int>("AluminiumCost")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("ConstructionEndTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("EnergyCost")
                         .HasColumnType("int");
 
