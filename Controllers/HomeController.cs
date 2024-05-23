@@ -6,6 +6,7 @@ using StellarIO.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 public class HomeController : Controller
 {
@@ -91,7 +92,11 @@ public class HomeController : Controller
                 return RedirectToAction("Index");
             }
 
-            var planets = _context.Planets.Where(p => p.UserId == user.Id).ToList();
+            var planets = await _context.Planets
+                .Where(p => p.UserId == user.Id)
+                .Include(p => p.Buildings) // Ensure buildings are included
+                .ToListAsync();
+
             return View(planets);
         }
         catch (Exception ex)
