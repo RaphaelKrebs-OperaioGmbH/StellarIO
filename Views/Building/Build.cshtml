@@ -13,6 +13,50 @@
     </div>
 }
 
+<style>
+    .card-building {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .card-header img {
+        width: 100%;
+        height: auto;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-body-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-footer {
+        flex-shrink: 0;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .details-section {
+        margin-top: auto;
+    }
+
+    .description-section {
+        min-height: 150px; /* Adjust based on the length of descriptions */
+    }
+</style>
+
 <div class="row">
     @foreach (var building in Model.AvailableBuildings)
     {
@@ -21,8 +65,8 @@
         var badgeColor = builtLevel > 0 ? "bg-primary" : "bg-secondary";
         var buttonText = builtLevel > 0 ? "Upgrade to level " + building.Level : "Build";
         var buttonIcon = builtLevel > 0 ? "fa-circle-up" : "fa-snowplow";
-        <div class="col-md-4">
-            <div class="card card-building mb-3">
+        <div class="col-md-4 mb-4">
+            <div class="card card-building">
                 <div class="card-header">
                     <img src="@imgUrl" alt="@building.Name">
                     <div class="header-content">
@@ -31,27 +75,35 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Duration">
-                        <span class="badge costs bg-duration me-2 text-light"><i class="fas fa-hourglass-half"></i></span>@building.Duration seconds
-                    </p>
-                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Completion Time">
-                        <span class="badge costs bg-completion me-2 text-light"><i class="fas fa-clock"></i></span>@DateTime.UtcNow.AddSeconds(@building.Duration).ToLocalTime()
-                    </p>
-                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Iron Cost">
-                        <span class="badge costs bg-iron me-2 text-light">Fe</span>@building.IronCost
-                    </p>
-                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Silver Cost">
-                        <span class="badge costs bg-silver me-2 text-light">Ag</span>@building.SilverCost
-                    </p>
-                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Aluminum Cost">
-                        <span class="badge costs bg-aluminum me-2 text-light">Al</span>@building.AluminiumCost
-                    </p>
-                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="H2 Cost">
-                        <span class="badge costs bg-h2 me-2 text-light">H<span class="small">2</span></span>@building.H2Cost
-                    </p>
-                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Energy Cost">
-                        <span class="badge costs bg-energy me-2 text-light"><i class="fas fa-bolt"></i></span>@building.EnergyCost
-                    </p>
+                    <div class="card-body-content">
+                        <div class="description-section">
+                            <p>@building.Description</p>
+                        </div>
+                        <hr>
+                        <div class="details-section">
+                            <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Duration">
+                                <span class="badge costs bg-duration me-2 text-light"><i class="fas fa-hourglass-half"></i></span>@building.Duration seconds
+                            </p>
+                            <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Completion Time">
+                                <span class="badge costs bg-completion me-2 text-light"><i class="fas fa-clock"></i></span>@DateTime.UtcNow.AddSeconds(@building.Duration).ToLocalTime()
+                            </p>
+                            <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Iron Cost">
+                                <span class="badge costs bg-iron me-2 text-light">Fe</span>@building.IronCost
+                            </p>
+                            <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Silver Cost">
+                                <span class="badge costs bg-silver me-2 text-light">Ag</span>@building.SilverCost
+                            </p>
+                            <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Aluminum Cost">
+                                <span class="badge costs bg-aluminum me-2 text-light">Al</span>@building.AluminiumCost
+                            </p>
+                            <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="H2 Cost">
+                                <span class="badge costs bg-h2 me-2 text-light">H<span class="small">2</span></span>@building.H2Cost
+                            </p>
+                            <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Energy Cost">
+                                <span class="badge costs bg-energy me-2 text-light"><i class="fas fa-bolt"></i></span>@building.EnergyCost
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer text-center p-0 bg-white">
                     <form asp-action="Build" method="post">

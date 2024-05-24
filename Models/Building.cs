@@ -16,4 +16,6 @@ public class Building
     public DateTime? ConstructionEndTime { get; set; }
     public DateTime? ConstructionStartTime { get; set; }
     public int Duration { get; set; } // Add Duration property
+    public string Description { get; set; } // Add Description property
+
 }

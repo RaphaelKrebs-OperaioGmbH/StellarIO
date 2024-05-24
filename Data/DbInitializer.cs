@@ -88,7 +88,8 @@ public class DbInitializer
                     AluminiumCost = 150,
                     H2Cost = 90,
                     EnergyCost = 90,
-                    Points = 0
+                    Points = 0,
+                    Description = "The Headquarters is the central building of your planet",
                 };
                 context.Buildings.Add(hq);
             }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace StellarIO.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240523212216_seed22")]
-    partial class seed22
+    [Migration("20240524202853_seed")]
+    partial class seed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,10 @@ namespace StellarIO.Migrations
 
                     b.Property<DateTime?>("ConstructionStartTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
