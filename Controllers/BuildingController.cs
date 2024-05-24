@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StellarIO.Models;
@@ -125,6 +126,14 @@ public class BuildingController : Controller
             {
                 _logger.LogWarning("Planet not found.");
                 return NotFound("Planet not found.");
+            }
+
+            // Check if there's already a building in progress
+            if (planet.Buildings.Any(b => b.ConstructionEndTime > DateTime.UtcNow))
+            {
+                _logger.LogWarning("A building is already in progress.");
+                ModelState.AddModelError("", "A building is already in progress on this planet.");
+                return View(model);
             }
 
             var selectedBuildingType = GetBuildingTypes().FirstOrDefault(b => b.Name == model.SelectedBuilding);
