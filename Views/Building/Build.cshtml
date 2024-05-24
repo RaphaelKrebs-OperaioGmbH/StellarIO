@@ -1,62 +1,39 @@
 ﻿@model BuildViewModel
 
 @{
-    ViewData["Title"] = "Build";
+    ViewData["Title"] = "Build a new building";
 }
 
 <h1>Build a new building</h1>
 
-<form asp-action="Build" method="post">
-    <input type="hidden" asp-for="PlanetId" />
-    <div class="form-group">
-        <label asp-for="SelectedBuilding">Select Building</label>
-        <select asp-for="SelectedBuilding" class="form-control" id="buildingSelect">
-            @foreach (var building in Model.AvailableBuildings)
-            {
-                <option value="@building.Name" data-duration="@building.Duration" data-iron="@building.IronCost" data-silver="@building.SilverCost" data-aluminium="@building.AluminiumCost" data-h2="@building.H2Cost" data-energy="@building.EnergyCost">@building.Name</option>
-            }
-        </select>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false, "A wild Ashi appears. Gotcha!")
     </div>
-    <div class="form-group">
-        <label asp-for="Duration">Duration (seconds)</label>
-        <input asp-for="Duration" class="form-control" readonly />
-    </div>
-    <div class="form-group">
-        <label asp-for="IronCost">Iron Cost</label>
-        <input asp-for="IronCost" class="form-control" readonly />
-    </div>
-    <div class="form-group">
-        <label asp-for="SilverCost">Silver Cost</label>
-        <input asp-for="SilverCost" class="form-control" readonly />
-    </div>
-    <div class="form-group">
-        <label asp-for="AluminiumCost">Aluminium Cost</label>
-        <input asp-for="AluminiumCost" class="form-control" readonly />
-    </div>
-    <div class="form-group">
-        <label asp-for="H2Cost">H2 Cost</label>
-        <input asp-for="H2Cost" class="form-control" readonly />
-    </div>
-    <div class="form-group">
-        <label asp-for="EnergyCost">Energy Cost</label>
-        <input asp-for="EnergyCost" class="form-control" readonly />
-    </div>
-    <button type="submit" class="btn btn-primary">Build</button>
-</form>
-
-@section Scripts {
-    <script>
-        function updateFormFields() {
-            var selectedOption = document.getElementById("buildingSelect").selectedOptions[0];
-            document.getElementById("Duration").value = selectedOption.getAttribute("data-duration");
-            document.getElementById("IronCost").value = selectedOption.getAttribute("data-iron");
-            document.getElementById("SilverCost").value = selectedOption.getAttribute("data-silver");
-            document.getElementById("AluminiumCost").value = selectedOption.getAttribute("data-aluminium");
-            document.getElementById("H2Cost").value = selectedOption.getAttribute("data-h2");
-            document.getElementById("EnergyCost").value = selectedOption.getAttribute("data-energy");
-        }
-
-        document.getElementById("buildingSelect").addEventListener("change", updateFormFields);
-        window.addEventListener("load", updateFormFields);
-    </script>
 }
+
+<div class="row">
+    @foreach (var building in Model.AvailableBuildings)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@building.Name</h5>
+                    <p class="card-text"><strong>Duration:</strong> @building.Duration seconds</p>
+                    <p class="card-text"><strong>Completion Time:</strong> @DateTime.UtcNow.AddSeconds(@building.Duration).ToLocalTime()</p>
+                    <p class="card-text"><strong>Iron Cost:</strong> @building.IronCost</p>
+                    <p class="card-text"><strong>Silver Cost:</strong> @building.SilverCost</p>
+                    <p class="card-text"><strong>Aluminium Cost:</strong> @building.AluminiumCost</p>
+                    <p class="card-text"><strong>H2 Cost:</strong> @building.H2Cost</p>
+                    <p class="card-text"><strong>Energy Cost:</strong> @building.EnergyCost</p>
+                    <form asp-action="Build" method="post">
+                        <input type="hidden" asp-for="PlanetId" />
+                        <input type="hidden" name="SelectedBuilding" value="@building.Name" />
+                        <button type="submit" class="btn btn-primary">Build</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

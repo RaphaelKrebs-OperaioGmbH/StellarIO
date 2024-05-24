@@ -18,7 +18,7 @@ public class ResourceGenerationService : IHostedService, IDisposable
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(UpdateResources, null, TimeSpan.Zero, TimeSpan.FromSeconds(5)); // Changed to 5 seconds
+        _timer = new Timer(UpdateResources, null, TimeSpan.Zero, TimeSpan.FromSeconds(15)); // Changed to 5 seconds
         return Task.CompletedTask;
     }
 

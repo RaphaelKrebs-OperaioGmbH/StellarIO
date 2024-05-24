@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StellarIO.Models;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -94,7 +95,9 @@ public class HomeController : Controller
 
             var planets = await _context.Planets
                 .Where(p => p.UserId == user.Id)
-                .Include(p => p.Buildings) // Ensure buildings are included
+                .Include(p => p.Buildings)
+                .Include(p => p.System)
+                .ThenInclude(s => s.Galaxy) // Ensure the related Galaxy is included
                 .ToListAsync();
 
             return View(planets);
@@ -113,5 +116,41 @@ public class HomeController : Controller
         await _signInManager.SignOutAsync();
         _logger.LogInformation("User logged out.");
         return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetPlanetStatus(int planetId)
+    {
+        var planet = await _context.Planets
+            .Include(p => p.Buildings)
+            .FirstOrDefaultAsync(p => p.Id == planetId);
+
+        if (planet == null)
+        {
+            return NotFound();
+        }
+
+        var buildingInProgress = planet.Buildings.FirstOrDefault(b => b.ConstructionEndTime > DateTime.UtcNow);
+
+        var result = new
+        {
+            building = buildingInProgress != null ? new
+            {
+                Name = buildingInProgress.Name,
+                ConstructionEndTime = buildingInProgress.ConstructionEndTime?.ToString("o", CultureInfo.InvariantCulture),
+                Id = buildingInProgress.Id
+            } : null,
+            resources = new
+            {
+                planet.Iron,
+                planet.Silver,
+                planet.Aluminium,
+                planet.H2,
+                planet.Energy
+            }
+        };
+
+        return Json(result);
     }
 }

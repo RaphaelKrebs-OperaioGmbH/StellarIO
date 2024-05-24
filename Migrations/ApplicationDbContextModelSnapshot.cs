@@ -21,6 +21,58 @@ namespace StellarIO.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Building", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AluminiumCost")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ConstructionEndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ConstructionStartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EnergyCost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("H2Cost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IronCost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlanetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SilverCost")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanetId");
+
+                    b.ToTable("Buildings");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -156,52 +208,6 @@ namespace StellarIO.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("StellarIO.Models.Building", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AluminiumCost")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ConstructionEndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EnergyCost")
-                        .HasColumnType("int");
-
-                    b.Property<int>("H2Cost")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IronCost")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PlanetId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SilverCost")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlanetId");
-
-                    b.ToTable("Buildings");
                 });
 
             modelBuilder.Entity("StellarIO.Models.Fleet", b =>
@@ -480,6 +486,17 @@ namespace StellarIO.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Building", b =>
+                {
+                    b.HasOne("StellarIO.Models.Planet", "Planet")
+                        .WithMany("Buildings")
+                        .HasForeignKey("PlanetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Planet");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -529,17 +546,6 @@ namespace StellarIO.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("StellarIO.Models.Building", b =>
-                {
-                    b.HasOne("StellarIO.Models.Planet", "Planet")
-                        .WithMany("Buildings")
-                        .HasForeignKey("PlanetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Planet");
                 });
 
             modelBuilder.Entity("StellarIO.Models.Fleet", b =>

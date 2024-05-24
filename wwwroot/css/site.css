@@ -53,3 +53,66 @@ body {
 .card-body h5 {
     margin-top: 20px;
 }
+
+.card-header {
+    padding: 10px;
+}
+
+.card-body {
+    padding: 10px;
+}
+
+    .card-body .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .card-body .col-md-6 {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+.list-unstyled {
+    padding-left: 0;
+}
+
+    .list-unstyled li {
+        margin-bottom: 5px;
+    }
+
+.text-white {
+    color: #fff !important;
+}
+
+.card-header {
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-header {
+    background-color: #ffc107;
+    color: black;
+    position: relative;
+}
+
+    .progress-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background-color: #28a745;
+        z-index: 0;
+        transition: width 0.25s;
+    }
+
+    .progress-header strong, .progress-header br, .progress-header {
+        position: relative;
+        z-index: 1;
+    }
+
+.text-white {
+    color: #fff !important;
+}
+

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StellarIO.Migrations
 {
     /// <inheritdoc />
-    public partial class seed : Migration
+    public partial class seed22 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -293,7 +293,9 @@ namespace StellarIO.Migrations
                     H2Cost = table.Column<int>(type: "int", nullable: false),
                     EnergyCost = table.Column<int>(type: "int", nullable: false),
                     Points = table.Column<int>(type: "int", nullable: false),
-                    ConstructionEndTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ConstructionEndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ConstructionStartTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Duration = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
