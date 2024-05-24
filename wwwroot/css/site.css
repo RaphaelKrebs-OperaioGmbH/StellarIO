@@ -116,3 +116,60 @@ body {
     color: #fff !important;
 }
 
+.w-fit-content {
+    width: fit-content;
+}
+
+.card-building .card-header {
+    width: 100%;
+    height: auto;
+    padding: 0px;
+    min-height: 67px;
+    background-color: rgba(var(--bs-dark-rgb), 1);
+}
+
+.card-building .card-header img {
+    width: 100%;
+    height: auto;
+}
+
+.card-building .card-header .header-content {
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(var(--bs-dark-rgb), 0.8);
+    padding: 10px;
+    width: 100%;
+}
+
+.card-building .card-header .header-content .badge {
+    position: absolute;
+    top: -10px;
+    right: 8px;
+}
+
+.badge.costs {
+    min-width: 32px;
+    text-align: center;
+}
+
+.bg-duration {
+    background-color: #000000;
+}
+.bg-completion {
+    background-color: #000000;
+}
+.bg-iron {
+    background-color: #d16820;
+}
+.bg-silver {
+    background-color: #b1aea5;
+}
+.bg-aluminum {
+    background-color: #b5b5b5;
+}
+.bg-h2 {
+    background-color: #1fb8ef;
+}
+.bg-energy {
+    background-color: #fdbb0d;
+}

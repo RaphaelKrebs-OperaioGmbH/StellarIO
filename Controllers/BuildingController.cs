@@ -54,7 +54,8 @@ public class BuildingController : Controller
                     SilverCost = recalculatedCosts.SilverCost,
                     AluminiumCost = recalculatedCosts.AluminiumCost,
                     H2Cost = recalculatedCosts.H2Cost,
-                    EnergyCost = recalculatedCosts.EnergyCost
+                    EnergyCost = recalculatedCosts.EnergyCost,
+                    Level = level
                 };
             }).ToList()
         };
