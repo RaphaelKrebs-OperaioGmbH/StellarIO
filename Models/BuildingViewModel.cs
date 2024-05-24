@@ -21,4 +21,5 @@ public class BuildingOption
     public int H2Cost { get; set; }
     public int EnergyCost { get; set; }
     public int Level { get; set; }
+    public string Description { get; set; }
 }
