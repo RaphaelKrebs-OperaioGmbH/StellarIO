@@ -16,21 +16,48 @@
 <div class="row">
     @foreach (var building in Model.AvailableBuildings)
     {
+        var imgUrl = "/img/building/" + building.Name.Replace(" ", "_") + ".jpeg";
+        var builtLevel = building.Level - 1;
+        var badgeColor = builtLevel > 0 ? "bg-primary" : "bg-secondary";
+        var buttonText = builtLevel > 0 ? "Upgrade to level " + building.Level : "Build";
+        var buttonIcon = builtLevel > 0 ? "fa-circle-up" : "fa-snowplow";
         <div class="col-md-4">
-            <div class="card mb-3">
+            <div class="card card-building mb-3">
+                <div class="card-header">
+                    <img src="@imgUrl" alt="@building.Name">
+                    <div class="header-content">
+                        <h5 class="card-title text-light">@building.Name</h5>
+                        <span class="badge rounded-pill @badgeColor">Level @builtLevel</span>
+                    </div>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">@building.Name</h5>
-                    <p class="card-text"><strong>Duration:</strong> @building.Duration seconds</p>
-                    <p class="card-text"><strong>Completion Time:</strong> @DateTime.UtcNow.AddSeconds(@building.Duration).ToLocalTime()</p>
-                    <p class="card-text"><strong>Iron Cost:</strong> @building.IronCost</p>
-                    <p class="card-text"><strong>Silver Cost:</strong> @building.SilverCost</p>
-                    <p class="card-text"><strong>Aluminium Cost:</strong> @building.AluminiumCost</p>
-                    <p class="card-text"><strong>H2 Cost:</strong> @building.H2Cost</p>
-                    <p class="card-text"><strong>Energy Cost:</strong> @building.EnergyCost</p>
+                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Duration">
+                        <span class="badge costs bg-duration me-2 text-light"><i class="fas fa-hourglass-half"></i></span>@building.Duration seconds
+                    </p>
+                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Completion Time">
+                        <span class="badge costs bg-completion me-2 text-light"><i class="fas fa-clock"></i></span>@DateTime.UtcNow.AddSeconds(@building.Duration).ToLocalTime()
+                    </p>
+                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Iron Cost">
+                        <span class="badge costs bg-iron me-2 text-light">Fe</span>@building.IronCost
+                    </p>
+                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Silver Cost">
+                        <span class="badge costs bg-silver me-2 text-light">Ag</span>@building.SilverCost
+                    </p>
+                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Aluminum Cost">
+                        <span class="badge costs bg-aluminum me-2 text-light">Al</span>@building.AluminiumCost
+                    </p>
+                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="H2 Cost">
+                        <span class="badge costs bg-h2 me-2 text-light">H<span class="small">2</span></span>@building.H2Cost
+                    </p>
+                    <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Energy Cost">
+                        <span class="badge costs bg-energy me-2 text-light"><i class="fas fa-bolt"></i></span>@building.EnergyCost
+                    </p>
+                </div>
+                <div class="card-footer text-center p-0 bg-white">
                     <form asp-action="Build" method="post">
                         <input type="hidden" asp-for="PlanetId" />
                         <input type="hidden" name="SelectedBuilding" value="@building.Name" />
-                        <button type="submit" class="btn btn-primary">Build</button>
+                        <button type="submit" class="btn btn-primary w-100">@buttonText <i class="fas @buttonIcon"></i></button>
                     </form>
                 </div>
             </div>

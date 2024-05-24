@@ -20,4 +20,5 @@ public class BuildingOption
     public int AluminiumCost { get; set; }
     public int H2Cost { get; set; }
     public int EnergyCost { get; set; }
+    public int Level { get; set; }
 }
