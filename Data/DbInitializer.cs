@@ -88,8 +88,9 @@ public class DbInitializer
                     AluminiumCost = 150,
                     H2Cost = 90,
                     EnergyCost = 90,
-                    Points = 0,
-                    Description = "The Headquarters is the central building of your planet",
+                    Duration = 10,
+                    Description = "The Headquarters is the central building of your planet. It serves as the administrative hub and the nerve center of all operations. Upgrading the HQ enhances your overall efficiency and unlocks new technologies and buildings.",
+                    Points = 20
                 };
                 context.Buildings.Add(hq);
             }

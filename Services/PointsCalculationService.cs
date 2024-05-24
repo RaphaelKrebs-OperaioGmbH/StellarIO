@@ -48,33 +48,7 @@ public class PointsCalculationService : BackgroundService
                     {
                         if (building.ConstructionEndTime == null || building.ConstructionEndTime <= DateTime.UtcNow)
                         {
-                            switch (building.Name)
-                            {
-                                case "HQ":
-                                    totalPoints += 20 * building.Level;
-                                    break;
-                                case "Iron Mine":
-                                    totalPoints += 10 * building.Level;
-                                    break;
-                                case "Silver Mine":
-                                    totalPoints += 10 * building.Level;
-                                    break;
-                                case "Aluminum Mill":
-                                    totalPoints += 20 * building.Level;
-                                    break;
-                                case "H2 Condenser":
-                                    totalPoints += 30 * building.Level;
-                                    break;
-                                case "Fusion Reactor":
-                                    totalPoints += 50 * building.Level;
-                                    break;
-                                case "Research Center":
-                                    totalPoints += 30 * building.Level;
-                                    break;
-                                case "Shipyard":
-                                    totalPoints += 200 * building.Level;
-                                    break;
-                            }
+                            totalPoints += building.Points * building.Level;
                         }
                     }
                 }

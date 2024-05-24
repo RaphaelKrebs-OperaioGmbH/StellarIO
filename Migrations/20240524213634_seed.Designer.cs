@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace StellarIO.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240524202853_seed")]
+    [Migration("20240524213634_seed")]
     partial class seed
     {
         /// <inheritdoc />
