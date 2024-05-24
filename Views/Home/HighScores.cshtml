@@ -1,0 +1,38 @@
+﻿@model IEnumerable<StellarIO.Models.HighScoreViewModel>
+
+@{
+    ViewData["Title"] = "High Scores";
+}
+
+<h1>High Scores</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            var rank = 1;
+            foreach (var user in Model)
+            {
+                <tr>
+                    <td>@rank</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Points</td>
+                </tr>
+                rank++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">No players found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
