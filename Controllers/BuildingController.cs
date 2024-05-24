@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StellarIO.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,6 +18,53 @@ public class BuildingController : Controller
         _context = context;
         _logger = logger;
     }
+
+    private readonly Dictionary<string, List<(string RequiredBuilding, int RequiredLevel)>> _buildingRequirements = new Dictionary<string, List<(string, int)>>()
+    {
+        { "Iron Mine", new List<(string, int)>
+            {
+                ("HQ", 1)
+            }
+        },
+        { "Silver Mine", new List<(string, int)>
+            {
+                ("HQ", 2)
+            }
+        },
+        { "Aluminum Mill", new List<(string, int)>
+            {
+                ("HQ", 2)
+            }
+        },
+        { "Fusion Reactor", new List<(string, int)> 
+            {
+                ("HQ", 3),
+                ("Iron Mine", 2),
+                ("Silver Mine", 2),
+                ("Aluminum Mill", 2),
+                ("H2 Condenser", 1)
+            } 
+        },
+        { "Shipyard", new List<(string, int)> 
+            {
+                ("HQ", 10),
+                ("Iron Mine", 5),
+                ("Silver Mine", 5),
+                ("Aluminum Mill", 3),
+                ("H2 Condenser", 4),
+                ("Fusion Reactor", 2)
+            } 
+        },
+        { "Research Center", new List<(string, int)>
+            {
+                ("HQ", 5),
+                ("Iron Mine", 4),
+                ("Silver Mine", 4),
+                ("H2 Condenser", 2),
+                ("Fusion Reactor", 2)
+            }
+        }
+    };
 
     [Authorize]
     [HttpGet]
@@ -39,25 +86,27 @@ public class BuildingController : Controller
         var model = new BuildViewModel
         {
             PlanetId = planetId,
-            AvailableBuildings = buildingTypes.Select(bt =>
-            {
-                var existingBuilding = planet.Buildings.FirstOrDefault(b => b.Name == bt.Name);
-                int level = existingBuilding != null ? existingBuilding.Level + 1 : 1;
-
-                var recalculatedCosts = RecalculateCosts(bt, level);
-
-                return new BuildingOption
+            AvailableBuildings = buildingTypes
+                .Where(bt => CheckBuildingRequirements(planet, bt.Name))
+                .Select(bt =>
                 {
-                    Name = bt.Name,
-                    Duration = recalculatedCosts.Duration,
-                    IronCost = recalculatedCosts.IronCost,
-                    SilverCost = recalculatedCosts.SilverCost,
-                    AluminiumCost = recalculatedCosts.AluminiumCost,
-                    H2Cost = recalculatedCosts.H2Cost,
-                    EnergyCost = recalculatedCosts.EnergyCost,
-                    Level = level
-                };
-            }).ToList()
+                    var existingBuilding = planet.Buildings.FirstOrDefault(b => b.Name == bt.Name);
+                    int level = existingBuilding != null ? existingBuilding.Level + 1 : 1;
+
+                    var recalculatedCosts = RecalculateCosts(bt, level);
+
+                    return new BuildingOption
+                    {
+                        Name = bt.Name,
+                        Duration = recalculatedCosts.Duration,
+                        IronCost = recalculatedCosts.IronCost,
+                        SilverCost = recalculatedCosts.SilverCost,
+                        AluminiumCost = recalculatedCosts.AluminiumCost,
+                        H2Cost = recalculatedCosts.H2Cost,
+                        EnergyCost = recalculatedCosts.EnergyCost,
+                        Level = level
+                    };
+                }).ToList()
         };
 
         return View(model);
@@ -78,19 +127,18 @@ public class BuildingController : Controller
                 return NotFound("Planet not found.");
             }
 
-            // Check if there's already a building in progress
-            if (planet.Buildings.Any(b => b.ConstructionEndTime > DateTime.UtcNow))
-            {
-                _logger.LogWarning("A building is already in progress.");
-                ModelState.AddModelError("", "A building is already in progress on this planet.");
-                return View(model);
-            }
-
             var selectedBuildingType = GetBuildingTypes().FirstOrDefault(b => b.Name == model.SelectedBuilding);
             if (selectedBuildingType == null)
             {
                 _logger.LogWarning("Building type not found.");
                 return NotFound("Building type not found.");
+            }
+
+            if (!CheckBuildingRequirements(planet, selectedBuildingType.Name))
+            {
+                _logger.LogWarning("Building requirements not met.");
+                ModelState.AddModelError("", "Building requirements not met.");
+                return View(model);
             }
 
             var existingBuilding = planet.Buildings.FirstOrDefault(b => b.Name == model.SelectedBuilding);
@@ -196,6 +244,23 @@ public class BuildingController : Controller
         await _context.SaveChangesAsync();
 
         return RedirectToAction("Dashboard", "Home");
+    }
+
+    private bool CheckBuildingRequirements(Planet planet, string buildingName)
+    {
+        if (_buildingRequirements.ContainsKey(buildingName))
+        {
+            foreach (var requirement in _buildingRequirements[buildingName])
+            {
+                var existingBuilding = planet.Buildings.FirstOrDefault(b => b.Name == requirement.RequiredBuilding);
+                if (existingBuilding == null || existingBuilding.Level < requirement.RequiredLevel)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private List<Building> GetBuildingTypes()
