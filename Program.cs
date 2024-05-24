@@ -24,8 +24,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddHostedService<ResourceGenerationService>();
 builder.Services.AddHostedService<BuildingConstructionService>();
-
-
+builder.Services.AddHostedService<PointsCalculationService>();
 
 var app = builder.Build();
 

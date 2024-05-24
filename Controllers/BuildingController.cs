@@ -194,7 +194,8 @@ public class BuildingController : Controller
                     H2Cost = recalculatedCosts.H2Cost,
                     EnergyCost = recalculatedCosts.EnergyCost,
                     Level = 1,
-                    ConstructionEndTime = DateTime.UtcNow.AddSeconds(recalculatedCosts.Duration)
+                    ConstructionEndTime = DateTime.UtcNow.AddSeconds(recalculatedCosts.Duration),
+                    Description = selectedBuildingType.Description
                 };
 
                 _context.Buildings.Add(building);
@@ -277,96 +278,96 @@ public class BuildingController : Controller
     private List<Building> GetBuildingTypes()
     {
         return new List<Building>
-{
-    new Building
-    {
-        Name = "HQ",
-        IronCost = 300,
-        SilverCost = 100,
-        AluminiumCost = 150,
-        H2Cost = 90,
-        EnergyCost = 100,
-        Duration = 10,
-        Description = "The Headquarters is the central building of your planet. It serves as the administrative hub and the nerve center of all operations. Upgrading the HQ enhances your overall efficiency and unlocks new technologies and buildings."
-    },
-    new Building
-    {
-        Name = "Iron Mine",
-        IronCost = 100,
-        SilverCost = 500,
-        AluminiumCost = 150,
-        H2Cost = 140,
-        EnergyCost = 140,
-        Duration = 60,
-        Description = "The Iron Mine extracts iron from the planet's crust. This essential resource is used for constructing various buildings and crafting items. Continuous upgrades increase extraction efficiency and output."
-    },
-    new Building
-    {
-        Name = "Silver Mine",
-        IronCost = 100,
-        SilverCost = 200,
-        AluminiumCost = 75,
-        H2Cost = 30,
-        EnergyCost = 30,
-        Duration = 60,
-        Description = "The Silver Mine extracts silver, a valuable resource used in advanced construction and technology development. Increasing the mine's capacity and efficiency ensures a steady supply of this precious metal."
-    },
-    new Building
-    {
-        Name = "Aluminum Mill",
-        IronCost = 300,
-        SilverCost = 100,
-        AluminiumCost = 50,
-        H2Cost = 500,
-        EnergyCost = 500,
-        Duration = 60,
-        Description = "The Aluminum Mill processes raw aluminum ore into usable metal, which is crucial for building lightweight structures and advanced technology. Upgrading the mill enhances processing speed and output."
-    },
-    new Building
-    {
-        Name = "H2 Condenser",
-        IronCost = 350,
-        SilverCost = 600,
-        AluminiumCost = 50,
-        H2Cost = 400,
-        EnergyCost = 400,
-        Duration = 60,
-        Description = "The H2 Condenser produces hydrogen fuel from water through a process of condensation and separation. Hydrogen is a key resource for energy production and advanced propulsion systems. Improvements to the condenser increase fuel yield and efficiency."
-    },
-    new Building
-    {
-        Name = "Fusion Reactor",
-        IronCost = 800,
-        SilverCost = 900,
-        AluminiumCost = 750,
-        H2Cost = 50,
-        EnergyCost = 50,
-        Duration = 60,
-        Description = "The Fusion Reactor generates vast amounts of energy by fusing hydrogen atoms. This advanced power source is essential for maintaining your colony's energy needs and supporting high-tech operations. Upgrading the reactor boosts energy output and stability."
-    },
-    new Building
-    {
-        Name = "Research Center",
-        IronCost = 300,
-        SilverCost = 100,
-        AluminiumCost = 150,
-        H2Cost = 90,
-        EnergyCost = 90,
-        Duration = 60,
-        Description = "The Research Center is where new technologies are developed and existing ones are enhanced. Scientists and engineers work tirelessly here to unlock advancements that drive your colony forward. Enhancements to the center accelerate research speed and unlock higher-tier technologies."
-    },
-    new Building
-    {
-        Name = "Shipyard",
-        IronCost = 18000,
-        SilverCost = 10000,
-        AluminiumCost = 15000,
-        H2Cost = 9000,
-        EnergyCost = 9000,
-        Duration = 60,
-        Description = "The Shipyard constructs and repairs spacecraft, enabling exploration and defense capabilities. This massive facility is crucial for expanding your reach across the stars and ensuring the safety of your fleet. Upgrading the shipyard reduces construction times and increases the size and complexity of ships that can be built."
-    }
-};
+        {
+        new Building
+        {
+            Name = "HQ",
+            IronCost = 300,
+            SilverCost = 100,
+            AluminiumCost = 150,
+            H2Cost = 90,
+            EnergyCost = 100,
+            Duration = 10,
+            Description = "The Headquarters is the central building of your planet. It serves as the administrative hub and the nerve center of all operations. Upgrading the HQ enhances your overall efficiency and unlocks new technologies and buildings."
+        },
+        new Building
+        {
+            Name = "Iron Mine",
+            IronCost = 100,
+            SilverCost = 500,
+            AluminiumCost = 150,
+            H2Cost = 140,
+            EnergyCost = 140,
+            Duration = 60,
+            Description = "The Iron Mine extracts iron from the planet's crust. This essential resource is used for constructing various buildings and crafting items. Continuous upgrades increase extraction efficiency and output."
+        },
+        new Building
+        {
+            Name = "Silver Mine",
+            IronCost = 100,
+            SilverCost = 200,
+            AluminiumCost = 75,
+            H2Cost = 30,
+            EnergyCost = 30,
+            Duration = 60,
+            Description = "The Silver Mine extracts silver, a valuable resource used in advanced construction and technology development. Increasing the mine's capacity and efficiency ensures a steady supply of this precious metal."
+        },
+        new Building
+        {
+            Name = "Aluminum Mill",
+            IronCost = 300,
+            SilverCost = 100,
+            AluminiumCost = 50,
+            H2Cost = 500,
+            EnergyCost = 500,
+            Duration = 60,
+            Description = "The Aluminum Mill processes raw aluminum ore into usable metal, which is crucial for building lightweight structures and advanced technology. Upgrading the mill enhances processing speed and output."
+        },
+        new Building
+        {
+            Name = "H2 Condenser",
+            IronCost = 350,
+            SilverCost = 600,
+            AluminiumCost = 50,
+            H2Cost = 400,
+            EnergyCost = 400,
+            Duration = 60,
+            Description = "The H2 Condenser produces hydrogen fuel from water through a process of condensation and separation. Hydrogen is a key resource for energy production and advanced propulsion systems. Improvements to the condenser increase fuel yield and efficiency."
+        },
+        new Building
+        {
+            Name = "Fusion Reactor",
+            IronCost = 800,
+            SilverCost = 900,
+            AluminiumCost = 750,
+            H2Cost = 50,
+            EnergyCost = 50,
+            Duration = 60,
+            Description = "The Fusion Reactor generates vast amounts of energy by fusing hydrogen atoms. This advanced power source is essential for maintaining your colony's energy needs and supporting high-tech operations. Upgrading the reactor boosts energy output and stability."
+        },
+        new Building
+        {
+            Name = "Research Center",
+            IronCost = 300,
+            SilverCost = 100,
+            AluminiumCost = 150,
+            H2Cost = 90,
+            EnergyCost = 90,
+            Duration = 60,
+            Description = "The Research Center is where new technologies are developed and existing ones are enhanced. Scientists and engineers work tirelessly here to unlock advancements that drive your colony forward. Enhancements to the center accelerate research speed and unlock higher-tier technologies."
+        },
+        new Building
+        {
+            Name = "Shipyard",
+            IronCost = 18000,
+            SilverCost = 10000,
+            AluminiumCost = 15000,
+            H2Cost = 9000,
+            EnergyCost = 9000,
+            Duration = 60,
+            Description = "The Shipyard constructs and repairs spacecraft, enabling exploration and defense capabilities. This massive facility is crucial for expanding your reach across the stars and ensuring the safety of your fleet. Upgrading the shipyard reduces construction times and increases the size and complexity of ships that can be built."
+        }
+        };
     }
 
     private Building RecalculateCosts(Building buildingType, int level)

@@ -74,6 +74,23 @@ public class HomeController : Controller
 
     [HttpGet]
     [Authorize]
+    public async Task<IActionResult> HighScores()
+    {
+        var users = await _context.Users
+            .OrderByDescending(u => u.Points)
+            .Select(u => new HighScoreViewModel
+            {
+                UserName = u.UserName,
+                Points = u.Points
+            })
+            .ToListAsync();
+
+        return View(users);
+    }
+
+
+    [HttpGet]
+    [Authorize]
     public IActionResult Loading()
     {
         return View();
@@ -97,10 +114,16 @@ public class HomeController : Controller
                 .Where(p => p.UserId == user.Id)
                 .Include(p => p.Buildings)
                 .Include(p => p.System)
-                .ThenInclude(s => s.Galaxy) // Ensure the related Galaxy is included
+                .ThenInclude(s => s.Galaxy)
                 .ToListAsync();
 
-            return View(planets);
+            var model = new DashboardViewModel
+            {
+                Points = user.Points,
+                Planets = planets
+            };
+
+            return View(model);
         }
         catch (Exception ex)
         {

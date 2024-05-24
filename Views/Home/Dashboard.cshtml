@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StellarIO.Models.Planet>
+﻿@model StellarIO.Models.DashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -76,11 +76,15 @@
     <p>Manage your planets and resources here.</p>
 </div>
 
-@if (Model != null && Model.Any())
+<div class="text-center">
+    <h2>Your Total Points: @Model.Points</h2>
+</div>
+
+@if (Model.Planets != null && Model.Planets.Any())
 {
     <h2>Your Planets</h2>
     <div class="row">
-        @foreach (var planet in Model)
+        @foreach (var planet in Model.Planets)
         {
             <div class="col-md-4">
                 <div class="card mb-3">
@@ -222,18 +226,18 @@ else
                 .then(data => {
                     if (data.building) {
                         document.getElementById('status-' + planetId).innerHTML = `
-                                    <div class="card-header progress-header bg-primary">
-                                        <div>
-                                            <strong>${data.building.Name}</strong> - Building...
-                                            <br />
-                                            Done at: ${new Date(data.building.ConstructionEndTime).toLocaleString()}
-                                        </div>
-                                        <form method="post" action="/Building/Cancel" class="d-inline">
-                                            <input type="hidden" name="buildingId" value="${data.building.Id}" />
-                                            <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
-                                        </form>
-                                    </div>
-                                `;
+                                            <div class="card-header progress-header bg-primary">
+                                                <div>
+                                                    <strong>${data.building.Name}</strong> - Building...
+                                                    <br />
+                                                    Done at: ${new Date(data.building.ConstructionEndTime).toLocaleString()}
+                                                </div>
+                                                <form method="post" action="/Building/Cancel" class="d-inline">
+                                                    <input type="hidden" name="buildingId" value="${data.building.Id}" />
+                                                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                                                </form>
+                                            </div>
+                                        `;
                     } else {
                         location.reload(); // Reload the page when a building is completed
                     }
@@ -242,7 +246,7 @@ else
         }
 
         function startUpdatingPlanets() {
-        @foreach (var planet in Model)
+        @foreach (var planet in Model.Planets)
         {
             <text>
                     setInterval(function () {
