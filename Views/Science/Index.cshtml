@@ -1,0 +1,186 @@
+﻿@model ScienceViewModel
+
+@{
+    ViewData["Title"] = "Science";
+}
+
+<h1>Science</h1>
+
+<style>
+    .card-building {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .card-header img {
+        width: 100%;
+        height: auto;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-body-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-footer {
+        flex-shrink: 0;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .details-section {
+        margin-top: auto;
+    }
+
+    .description-section {
+        min-height: 150px; /* Adjust based on the length of descriptions */
+    }
+
+    .resource-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #e9ecef;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+        .resource-bar .badge {
+            font-size: 1em;
+            padding: 10px;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        .resource-bar h2 {
+            margin: 0;
+            font-size: 1.5em;
+            color: black;
+        }
+
+    .planet-dropdown {
+        display: flex;
+        align-items: center;
+    }
+
+        .planet-dropdown select {
+            margin-left: 10px;
+            padding: 5px;
+            font-size: 1em;
+        }
+</style>
+
+<form asp-action="Start" method="post" id="scienceForm">
+    <div class="resource-bar">
+        <div class="planet-dropdown">
+            <h2>Planet: </h2>
+            @Html.DropDownListFor(m => m.SelectedPlanetId, Model.PlanetSelectList, new { @class = "form-control", onchange = "document.getElementById('scienceForm').submit();" })
+        </div>
+        <div>
+            <span class="badge bg-iron">Fe: @Model.PlanetIron</span>
+            <span class="badge bg-silver">Ag: @Model.PlanetSilver</span>
+            <span class="badge bg-aluminum">Al: @Model.PlanetAluminium</span>
+            <span class="badge bg-h2">H<span class="small">2</span>: @Model.PlanetH2</span>
+            <span class="badge bg-energy"><i class="fas fa-bolt"></i> @Model.PlanetEnergy</span>
+        </div>
+    </div>
+
+    @if (Model.ActiveScience != null)
+    {
+        <div class="text-center">
+            <h2>Research in Progress</h2>
+            <img src="/img/chemistry_logo.png" alt="Research in Progress" style="width: 200px; height: 200px;" />
+            <p style="font-size: 1.5em; font-weight: bold;">@Model.ActiveScience.Name</p>
+            <p>Time remaining: @(Model.ActiveScience.ResearchEndTime?.Subtract(DateTime.UtcNow).ToString(@"hh\:mm\:ss"))</p>
+            <form asp-action="Cancel" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger">Cancel Research</button>
+            </form>
+        </div>
+    }
+
+    else
+    {
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                @Html.ValidationSummary(false, "A wild Ashi appears. Gotcha!")
+            </div>
+        }
+
+        @if (!Model.AvailableSciences.Any())
+        {
+            <div class="alert alert-info">
+                You do not have the required infrastructure for sciences yet. You need to establish a research center on any planet first.
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var science in Model.AvailableSciences)
+                {
+                    var imgUrl = "/img/science/" + science.Name.Replace(" ", "_") + ".jpeg";
+                    var badgeColor = science.Level > 0 ? "bg-primary" : "bg-secondary";
+                    var buttonText = science.Level > 0 ? "Upgrade to level " + (science.Level + 1) : "Research";
+                    var buttonIcon = science.Level > 0 ? "fa-circle-up" : "fa-flask";
+                    <div class="col-md-4 mb-4">
+                        <div class="card card-building">
+                            <div class="card-header">
+                                <img src="@imgUrl" alt="@science.Name">
+                                <div class="header-content">
+                                    <h5 class="card-title text-light">@science.Name</h5>
+                                    <span class="badge rounded-pill @badgeColor">Level @science.Level</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-body-content">
+                                    <div class="description-section">
+                                        <p>@science.Description</p>
+                                    </div>
+                                    <hr>
+                                    <div class="details-section">
+                                        <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Duration">
+                                            <span class="badge costs bg-duration me-2 text-light"><i class="fas fa-hourglass-half"></i></span>@science.Duration seconds
+                                        </p>
+                                        <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Iron Cost">
+                                            <span class="badge costs bg-iron me-2 text-light">Fe</span>@science.IronCost
+                                        </p>
+                                        <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Silver Cost">
+                                            <span class="badge costs bg-silver me-2 text-light">Ag</span>@science.SilverCost
+                                        </p>
+                                        <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Aluminum Cost">
+                                            <span class="badge costs bg-aluminum me-2 text-light">Al</span>@science.AluminiumCost
+                                        </p>
+                                        <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="H2 Cost">
+                                            <span class="badge costs bg-h2 me-2 text-light">H<span class="small">2</span></span>@science.H2Cost
+                                        </p>
+                                        <p class="card-text w-fit-content" data-bs-toggle="tooltip" data-bs-placement="right" title="Energy Cost">
+                                            <span class="badge costs bg-energy me-2 text-light"><i class="fas fa-bolt"></i></span>@science.EnergyCost
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center p-0 bg-white">
+                                <button type="submit" class="btn btn-primary w-100" name="scienceId" value="@science.Id">@buttonText <i class="fas @buttonIcon"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</form>

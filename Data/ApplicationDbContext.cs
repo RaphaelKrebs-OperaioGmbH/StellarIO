@@ -61,6 +61,13 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .HasForeignKey(s => s.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // User - ActiveScience relationship
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.ActiveScience)
+            .WithOne()
+            .HasForeignKey<User>(u => u.ActiveScienceId)
+            .OnDelete(DeleteBehavior.Restrict); // Use Restrict here
+
         // Galaxy - GalaxySystem relationship
         modelBuilder.Entity<GalaxySystem>()
             .HasOne(gs => gs.Galaxy)
@@ -82,4 +89,5 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .HasForeignKey(s => s.ScienceRequiredId)
             .OnDelete(DeleteBehavior.Restrict);
     }
+
 }
