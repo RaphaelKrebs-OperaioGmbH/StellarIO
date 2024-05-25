@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Numerics;
+using System.Collections.Generic;
 
 namespace StellarIO.Models
 {
@@ -8,5 +8,7 @@ namespace StellarIO.Models
         public List<Planet> Planets { get; set; } = new List<Planet>();
         public List<Science> Sciences { get; set; } = new List<Science>();
         public int Points { get; set; }
+        public int? ActiveScienceId { get; set; }
+        public Science ActiveScience { get; set; }
     }
 }

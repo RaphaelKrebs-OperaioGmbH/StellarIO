@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StellarIO.Migrations
 {
     /// <inheritdoc />
-    public partial class seed : Migration
+    public partial class seedjhgfddwhjklhjJJhjfdgugftdlkgh : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,32 +23,6 @@ namespace StellarIO.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Points = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,6 +60,25 @@ namespace StellarIO.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GalaxySystems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GalaxyId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GalaxySystems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GalaxySystems_Galaxies_GalaxyId",
+                        column: x => x.GalaxyId,
+                        principalTable: "Galaxies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -98,12 +91,6 @@ namespace StellarIO.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -118,12 +105,6 @@ namespace StellarIO.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -142,12 +123,33 @@ namespace StellarIO.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Points = table.Column<int>(type: "int", nullable: false),
+                    ActiveScienceId = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -168,76 +170,6 @@ namespace StellarIO.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Sciences",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Level = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sciences", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Sciences_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GalaxySystems",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GalaxyId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GalaxySystems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GalaxySystems_Galaxies_GalaxyId",
-                        column: x => x.GalaxyId,
-                        principalTable: "Galaxies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ships",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AttackPoints = table.Column<int>(type: "int", nullable: false),
-                    DefensePoints = table.Column<int>(type: "int", nullable: false),
-                    Speed = table.Column<int>(type: "int", nullable: false),
-                    CargoCapacity = table.Column<int>(type: "int", nullable: false),
-                    IronCost = table.Column<int>(type: "int", nullable: false),
-                    SilverCost = table.Column<int>(type: "int", nullable: false),
-                    AluminiumCost = table.Column<int>(type: "int", nullable: false),
-                    H2Cost = table.Column<int>(type: "int", nullable: false),
-                    EnergyCost = table.Column<int>(type: "int", nullable: false),
-                    ScienceRequiredId = table.Column<int>(type: "int", nullable: false),
-                    Points = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ships", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Ships_Sciences_ScienceRequiredId",
-                        column: x => x.ScienceRequiredId,
-                        principalTable: "Sciences",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -274,6 +206,36 @@ namespace StellarIO.Migrations
                         name: "FK_Planets_GalaxySystems_SystemId",
                         column: x => x.SystemId,
                         principalTable: "GalaxySystems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sciences",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Level = table.Column<int>(type: "int", nullable: false),
+                    IronCost = table.Column<int>(type: "int", nullable: false),
+                    SilverCost = table.Column<int>(type: "int", nullable: false),
+                    AluminiumCost = table.Column<int>(type: "int", nullable: false),
+                    H2Cost = table.Column<int>(type: "int", nullable: false),
+                    EnergyCost = table.Column<int>(type: "int", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    ResearchStartTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ResearchEndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sciences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sciences_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -344,6 +306,36 @@ namespace StellarIO.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Ships",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AttackPoints = table.Column<int>(type: "int", nullable: false),
+                    DefensePoints = table.Column<int>(type: "int", nullable: false),
+                    Speed = table.Column<int>(type: "int", nullable: false),
+                    CargoCapacity = table.Column<int>(type: "int", nullable: false),
+                    IronCost = table.Column<int>(type: "int", nullable: false),
+                    SilverCost = table.Column<int>(type: "int", nullable: false),
+                    AluminiumCost = table.Column<int>(type: "int", nullable: false),
+                    H2Cost = table.Column<int>(type: "int", nullable: false),
+                    EnergyCost = table.Column<int>(type: "int", nullable: false),
+                    ScienceRequiredId = table.Column<int>(type: "int", nullable: false),
+                    Points = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ships", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ships_Sciences_ScienceRequiredId",
+                        column: x => x.ScienceRequiredId,
+                        principalTable: "Sciences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -375,6 +367,13 @@ namespace StellarIO.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_ActiveScienceId",
+                table: "AspNetUsers",
+                column: "ActiveScienceId",
+                unique: true,
+                filter: "[ActiveScienceId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -427,11 +426,47 @@ namespace StellarIO.Migrations
                 name: "IX_Ships_ScienceRequiredId",
                 table: "Ships",
                 column: "ScienceRequiredId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                table: "AspNetUserRoles",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUsers_Sciences_ActiveScienceId",
+                table: "AspNetUsers",
+                column: "ActiveScienceId",
+                principalTable: "Sciences",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Sciences_AspNetUsers_UserId",
+                table: "Sciences");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -463,16 +498,16 @@ namespace StellarIO.Migrations
                 name: "Planets");
 
             migrationBuilder.DropTable(
-                name: "Sciences");
+                name: "GalaxySystems");
 
             migrationBuilder.DropTable(
-                name: "GalaxySystems");
+                name: "Galaxies");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Galaxies");
+                name: "Sciences");
         }
     }
 }

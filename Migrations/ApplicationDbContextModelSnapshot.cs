@@ -352,12 +352,40 @@ namespace StellarIO.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AluminiumCost")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EnergyCost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("H2Cost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IronCost")
+                        .HasColumnType("int");
+
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResearchEndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ResearchStartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SilverCost")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -430,6 +458,9 @@ namespace StellarIO.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ActiveScienceId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -478,6 +509,10 @@ namespace StellarIO.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ActiveScienceId")
+                        .IsUnique()
+                        .HasFilter("[ActiveScienceId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -628,6 +663,16 @@ namespace StellarIO.Migrations
                         .IsRequired();
 
                     b.Navigation("ScienceRequired");
+                });
+
+            modelBuilder.Entity("StellarIO.Models.User", b =>
+                {
+                    b.HasOne("StellarIO.Models.Science", "ActiveScience")
+                        .WithOne()
+                        .HasForeignKey("StellarIO.Models.User", "ActiveScienceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ActiveScience");
                 });
 
             modelBuilder.Entity("StellarIO.Models.Galaxy", b =>

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StellarIO.Models;
@@ -37,16 +36,16 @@ public class BuildingController : Controller
                 ("HQ", 2)
             }
         },
-        { "Fusion Reactor", new List<(string, int)> 
+        { "Fusion Reactor", new List<(string, int)>
             {
                 ("HQ", 3),
                 ("Iron Mine", 2),
                 ("Silver Mine", 2),
                 ("Aluminum Mill", 2),
                 ("H2 Condenser", 1)
-            } 
+            }
         },
-        { "Shipyard", new List<(string, int)> 
+        { "Shipyard", new List<(string, int)>
             {
                 ("HQ", 10),
                 ("Iron Mine", 5),
@@ -54,19 +53,15 @@ public class BuildingController : Controller
                 ("Aluminum Mill", 3),
                 ("H2 Condenser", 4),
                 ("Fusion Reactor", 2)
-            } 
+            }
         },
         { "Research Center", new List<(string, int)>
             {
-                ("HQ", 5),
-                ("Iron Mine", 4),
-                ("Silver Mine", 4),
-                ("H2 Condenser", 2),
-                ("Fusion Reactor", 2)
+                ("HQ", 3)
             }
         }
     };
-
+    
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> Build(int planetId)
@@ -77,7 +72,11 @@ public class BuildingController : Controller
             return NotFound("No building types found.");
         }
 
-        var planet = await _context.Planets.Include(p => p.Buildings).FirstOrDefaultAsync(p => p.Id == planetId);
+        var planet = await _context.Planets
+            .Include(p => p.Buildings)
+            .Include(p => p.System) // Ensure System is included
+            .FirstOrDefaultAsync(p => p.Id == planetId);
+
         if (planet == null)
         {
             _logger.LogWarning("Planet not found.");
@@ -87,6 +86,12 @@ public class BuildingController : Controller
         var model = new BuildViewModel
         {
             PlanetId = planetId,
+            PlanetCoordinates = planet.Coordinates, // Set this property
+            PlanetIron = planet.Iron,
+            PlanetSilver = planet.Silver,
+            PlanetAluminium = planet.Aluminium,
+            PlanetH2 = planet.H2,
+            PlanetEnergy = planet.Energy,
             AvailableBuildings = buildingTypes
                 .Where(bt => CheckBuildingRequirements(planet, bt.Name))
                 .Select(bt =>
@@ -120,6 +125,9 @@ public class BuildingController : Controller
     public async Task<IActionResult> Build(BuildViewModel model)
     {
         _logger.LogInformation("Build POST method called.");
+
+        // Remove the validation for PlanetCoordinates if it's not necessary
+        ModelState.Remove("PlanetCoordinates");
 
         if (ModelState.IsValid)
         {
@@ -376,7 +384,6 @@ public class BuildingController : Controller
                 Points = 200
             }
         };
-
     }
 
     private Building RecalculateCosts(Building buildingType, int level)

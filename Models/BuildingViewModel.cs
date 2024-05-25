@@ -9,6 +9,12 @@
     public int H2Cost { get; set; }
     public int EnergyCost { get; set; }
     public List<BuildingOption> AvailableBuildings { get; set; } = new List<BuildingOption>();
+    public string? PlanetCoordinates { get; set; }
+    public int PlanetIron { get; set; }
+    public int PlanetSilver { get; set; }
+    public int PlanetAluminium { get; set; }
+    public int PlanetH2 { get; set; }
+    public int PlanetEnergy { get; set; }
 }
 
 public class BuildingOption

@@ -55,7 +55,41 @@
     .description-section {
         min-height: 150px; /* Adjust based on the length of descriptions */
     }
+
+    .resource-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #e9ecef;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+        .resource-bar .badge {
+            font-size: 1em;
+            padding: 10px;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        .resource-bar h2 {
+            margin: 0;
+            font-size: 1.5em;
+            color: black;
+        }
 </style>
+
+<div class="resource-bar">
+    <h2>Planet: @Model.PlanetCoordinates</h2>
+    <div>
+        <span class="badge bg-iron">Fe: @Model.PlanetIron</span>
+        <span class="badge bg-silver">Ag: @Model.PlanetSilver</span>
+        <span class="badge bg-aluminum">Al: @Model.PlanetAluminium</span>
+        <span class="badge bg-h2">H<span class="small">2</span>: @Model.PlanetH2</span>
+        <span class="badge bg-energy"><i class="fas fa-bolt"></i> @Model.PlanetEnergy</span>
+    </div>
+</div>
 
 <div class="row">
     @foreach (var building in Model.AvailableBuildings)
@@ -108,6 +142,7 @@
                 <div class="card-footer text-center p-0 bg-white">
                     <form asp-action="Build" method="post">
                         <input type="hidden" asp-for="PlanetId" />
+                        <!-- Remove the unnecessary field -->
                         <input type="hidden" name="SelectedBuilding" value="@building.Name" />
                         <button type="submit" class="btn btn-primary w-100">@buttonText <i class="fas @buttonIcon"></i></button>
                     </form>
