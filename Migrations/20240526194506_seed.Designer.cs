@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace StellarIO.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240525004245_seedjhgfddwhjklhjJJhjfdgugftdlkgh")]
-    partial class seedjhgfddwhjklhjJJhjfdgugftdlkgh
+    [Migration("20240526194506_seed")]
+    partial class seed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

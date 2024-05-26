@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StellarIO.Migrations
 {
     /// <inheritdoc />
-    public partial class seedjhgfddwhjklhjJJhjfdgugftdlkgh : Migration
+    public partial class seed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

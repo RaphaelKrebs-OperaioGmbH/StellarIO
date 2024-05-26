@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace StellarIO.Models
 {
@@ -7,8 +8,10 @@ namespace StellarIO.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int SystemId { get; set; }
+        [JsonIgnore]
         public GalaxySystem System { get; set; } = default!;
         public string? UserId { get; set; } // Make UserId nullable
+        [JsonIgnore]
         public User? User { get; set; } = default!;
 
         // Properties related to resource generation
