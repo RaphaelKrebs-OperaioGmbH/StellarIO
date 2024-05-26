@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StellarIO.Models;
+using StellarIO.Services;
 using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,11 +22,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString).EnableSensitiveDataLogging());
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(options => {
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 builder.Services.AddRazorPages();
 builder.Services.AddHostedService<ResourceGenerationService>();
 builder.Services.AddHostedService<BuildingConstructionService>();
 builder.Services.AddHostedService<PointsCalculationService>();
+
+builder.Services.AddScoped<PlanetService>();
 
 var app = builder.Build();
 

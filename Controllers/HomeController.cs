@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using StellarIO.Services;
 
 public class HomeController : Controller
 {
@@ -15,16 +16,19 @@ public class HomeController : Controller
     private readonly UserManager<User> _userManager;
     private readonly ApplicationDbContext _context;
     private readonly ILogger<HomeController> _logger;
+    private readonly PlanetService _planetService;
 
     public HomeController(
         SignInManager<User> signInManager,
         UserManager<User> userManager,
         ApplicationDbContext context,
+        PlanetService planetService,
         ILogger<HomeController> logger)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _context = context;
+        _planetService = planetService;
         _logger = logger;
     }
 
@@ -110,12 +114,7 @@ public class HomeController : Controller
                 return RedirectToAction("Index");
             }
 
-            var planets = await _context.Planets
-                .Where(p => p.UserId == user.Id)
-                .Include(p => p.Buildings)
-                .Include(p => p.System)
-                .ThenInclude(s => s.Galaxy)
-                .ToListAsync();
+            var planets = await _planetService.GetPlanetsOwnedByUser(user.Id).ToListAsync();
 
             var model = new DashboardViewModel
             {
