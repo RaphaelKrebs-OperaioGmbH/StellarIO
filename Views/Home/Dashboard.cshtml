@@ -4,13 +4,118 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div ng-controller="dashboardController" class="dashboard page-container">
-    <div ng-if="!myPlanets" class="text-center">
+<div ng-controller="dashboardController" class="dashboard" ng-class="{'showing-planet': selectedPlanet}">
+    <div ng-if="!myPlanets" class="page-loading-indicator">
         <i class="fas fa-2xl fa-spinner fa-spin"></i>
     </div>
-    <div ng-class="page-list">
-        <div class="page-list-item" ng-repeat="planet in myPlanets">
-            <h5>{{planet.name}}</h5>
+    <div class="planet-list page-list">
+        <div class="planet-list-item hover-bg-border-gradient-1" ng-repeat="planet in myPlanets" ng-click="selectPlanet(planet)">
+            <div class="d-flex flex-xxl-nowrap flex-wrap">
+                <div class="d-flex">
+                    <div class="page-list-item-img planet-list-item-img">
+                        <div class="planet-img-container">
+                            <img class="planet-img" ng-src="{{getPlanetImgSrc(planet)}}" style="{{getPlanetImgStyle(planet)}}" />
+                        </div>
+                    </div>
+                    <div class="planet-list-item-body">
+                        <div class="d-flex">
+                            <h5>{{planet.name}}</h5>
+                        </div>
+                        <div>
+                            <p class="heading-text-secondary">Resources</p>
+                            <div class="d-flex">
+                                <span class="badge rounded-pill bg-iron me-1"><sci-number value="planet.iron"></sci-number> Fe</span>
+                                <span class="badge rounded-pill bg-silver me-1"><sci-number value="planet.silver"></sci-number> Ag</span>
+                                <span class="badge rounded-pill bg-aluminum me-1"><sci-number value="planet.aluminium"></sci-number> Al</span>
+                                <span class="badge rounded-pill bg-h2 me-1"><sci-number value="planet.h2"></sci-number> H<span class="small">2</span></span>
+                                <span class="badge rounded-pill bg-energy"><sci-number value="planet.iron"></sci-number> <i class="fas fa-bolt"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="planet-list-item-body">
+                        <div>
+                            <p class="heading-text-secondary">Buildings</p>
+                            <div ng-repeat="building in planet.buildings">
+                                <p class="building-label">{{building.name}}<span class="badge rounded-pill bg-lowlight text-lowlight ms-2">Level {{building.level}}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="planet-list-item-showmore">
+                <i class="fas fa-chevron-right fa-xl"></i>
+            </div>
+        </div>
+    </div>
+    <div class="planet-form">
+        <div>
+            <a href="#" class="btn btn-secondary" ng-click="selectPlanet(null)"><i class="fas fa-arrow-left"></i> Back to Planets</a>
+        </div>
+        <div class="d-flex flex-wrap">
+            <div class="planet-form-item-img">
+                <div class="planet-img-container">
+                    <img class="planet-img" ng-src="{{getPlanetImgSrc(selectedPlanet)}}" style="{{getPlanetImgStyle(selectedPlanet)}}" />
+                </div>
+            </div>
+            <div>
+                <h2>{{selectedPlanet.name}}</h2>
+                <div>
+                    <p class="heading-text-secondary">Resources</p>
+                    <div class="d-flex mb-3">
+                        <span class="badge rounded-pill bg-iron me-1"><sci-number value="selectedPlanet.iron"></sci-number> Fe</span>
+                        <span class="badge rounded-pill bg-silver me-1"><sci-number value="selectedPlanet.silver"></sci-number> Ag</span>
+                        <span class="badge rounded-pill bg-aluminum me-1"><sci-number value="selectedPlanet.aluminium"></sci-number> Al</span>
+                        <span class="badge rounded-pill bg-h2 me-1"><sci-number value="selectedPlanet.h2"></sci-number> H<span class="small">2</span></span>
+                        <span class="badge rounded-pill bg-energy"><sci-number value="selectedPlanet.iron"></sci-number> <i class="fas fa-bolt"></i></span>
+                    </div>
+                </div>
+                <div>
+                    <p class="heading-text-primary">Info</p>
+                    <p class="heading-text-secondary">Relative speed</p>
+                    <div class="mb-2">
+                        <span class="badge rounded-pill bg-completion"><i class="fas fa-clock"></i> : {{selectedPlanet.relativeSpeed}}%</span>
+                    </div>
+                    <p class="heading-text-secondary">Relative resource output</p>
+                    <div class="d-flex">
+                        <span class="badge rounded-pill bg-iron me-1">Fe : {{selectedPlanet.relativeIronOutput}}%</span>
+                        <span class="badge rounded-pill bg-silver me-1">Ag : {{selectedPlanet.relativeSilverOutput}}%</span>
+                        <span class="badge rounded-pill bg-aluminum me-1">Al : {{selectedPlanet.relativeAluminiumOutput}}%</span>
+                        <span class="badge rounded-pill bg-h2 me-1">H<span class="small">2</span> : {{selectedPlanet.relativeH2Output}}%</span>
+                        <span class="badge rounded-pill bg-energy"><i class="fas fa-bolt"></i> : {{selectedPlanet.relativeEnergyOutput}}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="form-seperator" />
+
+        <h3>Buildings</h3>
+        <div class="page-list">
+            <div class="planet-list-item hover-bg-border-gradient-1" ng-repeat="building in selectedPlanet.buildings">
+                <div class="d-flex">
+                    <div class="page-list-item-img">
+                        <div class="building-img-container">
+                            <img class="building-img" ng-src="{{getBuildingImgSrc(building)}}" />
+                        </div>
+                    </div>
+                    <div class="planet-list-item-body">
+                        <div class="d-flex">
+                            <h5>{{building.name}}<span class="badge rounded-pill bg-primary ms-2">Level {{building.level}}</span></h5>
+                        </div>
+                        <div>
+                            <p class="heading-text-secondary">Resources</p>
+                            <div class="d-flex">
+                                <span class="badge rounded-pill bg-iron me-1"><sci-number value="planet.iron"></sci-number> Fe</span>
+                                <span class="badge rounded-pill bg-silver me-1"><sci-number value="planet.silver"></sci-number> Ag</span>
+                                <span class="badge rounded-pill bg-aluminum me-1"><sci-number value="planet.aluminium"></sci-number> Al</span>
+                                <span class="badge rounded-pill bg-h2 me-1"><sci-number value="planet.h2"></sci-number> H<span class="small">2</span></span>
+                                <span class="badge rounded-pill bg-energy"><sci-number value="planet.iron"></sci-number> <i class="fas fa-bolt"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

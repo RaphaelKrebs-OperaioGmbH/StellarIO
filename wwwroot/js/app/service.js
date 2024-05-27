@@ -86,6 +86,7 @@ appService.service("stellarApi", ["$http", "$q", function ($http, $q) {
 }]);
 
 appService.service("planetService", ["$http", "$q", "stellarApi", function ($http, $q, stellarApi) {
+    const planetImagesCount = 7;
     return {
         getPlanets: function () {
             return stellarApi.get("planet");
@@ -95,6 +96,24 @@ appService.service("planetService", ["$http", "$q", "stellarApi", function ($htt
         },
         getPlanet: function (planetId) {
             return stellarApi.get("planet/" + planetId);
+        },
+        getPlanetImgUrl: function (planet) {
+            var seed = planet.id + 1;
+            var x = Math.sin(seed++) * (planetImagesCount -1);
+            if (x < 0) {
+                x = x * -1;
+            }
+            x = Math.floor(x+1);
+            return "/img/planet/p" + x + ".jpeg";
+        },
+        getPlanetImgStyle: function (planet) {
+            var seed = planet.id + 1;
+            var x = Math.sin(seed++) * 360;
+            if (x < 0) {
+                x = x * -1;
+            }
+            x = Math.floor(x + 1);
+            return "filter: saturate(200%) brightness(100%) hue-rotate(" + x + "deg);"
         }
     }
 }])
