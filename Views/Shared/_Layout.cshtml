@@ -5,7 +5,7 @@
 @inject UserManager<StellarIO.Models.User> UserManager
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="stellarIO">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -77,6 +77,8 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/angular/angular.js"></script>
     <script src="~/lib/angular/angular-resource.js"></script>
+    <script src="~/js/app/service.js" asp-append-version="true"></script>
+    <script src="~/js/app/app.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
