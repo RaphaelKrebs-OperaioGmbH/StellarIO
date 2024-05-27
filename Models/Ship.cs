@@ -1,4 +1,6 @@
-﻿namespace StellarIO.Models
+﻿using System.Text.Json.Serialization;
+
+namespace StellarIO.Models
 {
     public class Ship
     {
@@ -14,6 +16,7 @@
         public int H2Cost { get; set; }
         public int EnergyCost { get; set; }
         public int ScienceRequiredId { get; set; }
+        [JsonIgnore]
         public Science ScienceRequired { get; set; }
         public int Points { get; set; }
     }

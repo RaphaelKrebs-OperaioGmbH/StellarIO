@@ -1,4 +1,5 @@
 ﻿using StellarIO.Models;
+using System.Text.Json.Serialization;
 
 public class Building
 {
@@ -6,6 +7,7 @@ public class Building
     public string Name { get; set; }
     public int Level { get; set; }
     public int PlanetId { get; set; }
+    [JsonIgnore]
     public Planet Planet { get; set; }
     public int IronCost { get; set; }
     public int SilverCost { get; set; }

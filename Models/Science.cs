@@ -1,10 +1,13 @@
-﻿namespace StellarIO.Models
+﻿using System.Text.Json.Serialization;
+
+namespace StellarIO.Models
 {
     public class Science
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string UserId { get; set; }
+        [JsonIgnore]
         public User User { get; set; }
         public int Level { get; set; }
         public int IronCost { get; set; }
