@@ -69,5 +69,25 @@ namespace StellarIO.Controllers.Api
             }
             return planet;
         }
+
+        /// <summary>
+        /// Returns the available building options of a specific planet.
+        /// Again, this should be secured somehow - a tech savy user could use this endpoint
+        /// to understand what buildings exist on a planet that he does not own.
+        /// </summary>
+        /// <param name="planetId">Id of the planet to get the building options for</param>
+        /// <returns>List of building options</returns>
+        [HttpGet("{planetId}/buildoptions")]
+        public async Task<ActionResult<List<BuildingOption>>> GetBuildingOptions(int planetId)
+        {
+            try
+            {
+                return await _planetService.GetBuildingOptionsAsync(planetId);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
     }
 }

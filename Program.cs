@@ -31,6 +31,7 @@ builder.Services.AddHostedService<BuildingConstructionService>();
 builder.Services.AddHostedService<PointsCalculationService>();
 
 builder.Services.AddScoped<PlanetService>();
+builder.Services.AddScoped<BuildService>();
 
 var app = builder.Build();
 
