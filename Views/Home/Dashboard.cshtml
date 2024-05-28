@@ -4,263 +4,118 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<style>
-    .card-header.black-header {
-        background-color: #000;
-        color: #fff;
-    }
-
-    .progress-header, .no-progress-header {
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-        .progress-header.bg-primary {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .no-progress-header.bg-warning {
-            background-color: #ffc107;
-            color: #000;
-        }
-
-    .card-body {
-        display: none;
-    }
-
-    .build-button {
-        box-shadow: 0 0 10px #00ff00;
-        transition: box-shadow 0.3s ease-in-out;
-    }
-
-        .build-button:hover {
-            box-shadow: 0 0 20px #00ff00;
-        }
-
-    .building-name {
-        font-weight: bold;
-        font-style: italic;
-    }
-
-    .toggle-button {
-        cursor: pointer;
-        text-decoration: underline;
-        color: #007bff;
-    }
-
-    .collapsible {
-        display: none;
-    }
-
-        .collapsible.expanded {
-            display: block;
-        }
-
-    .section-header {
-        cursor: pointer;
-        font-weight: bold;
-        padding: 5px 0;
-        font-size: 1.25em;
-    }
-
-    .section-content {
-        padding-left: 10px;
-    }
-</style>
-
-<div class="text-center">
-    <h1 class="display-4">Welcome to your Dashboard</h1>
-    <p>Manage your planets and resources here.</p>
-</div>
-
-<div class="text-center">
-    <h2>Your Total Points: @Model.Points</h2>
-</div>
-
-@if (Model.Planets != null && Model.Planets.Any())
-{
-    <h2>Your Planets</h2>
-    <div class="row">
-        @foreach (var planet in Model.Planets)
-        {
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <div class="card-header black-header" onclick="toggleDetails(@planet.Id)">
-                        <h4 class="card-title mb-0">Planet @planet.Coordinates</h4>
+<div ng-controller="dashboardController" class="dashboard" ng-class="{'showing-planet': selectedPlanet}">
+    <div ng-if="!myPlanets" class="page-loading-indicator">
+        <i class="fas fa-2xl fa-spinner fa-spin"></i>
+    </div>
+    <div class="planet-list page-list">
+        <div class="planet-list-item hover-bg-border-gradient-1" ng-repeat="planet in myPlanets" ng-click="selectPlanet(planet)">
+            <div class="d-flex flex-xxl-nowrap flex-wrap">
+                <div class="d-flex">
+                    <div class="page-list-item-img planet-list-item-img">
+                        <div class="planet-img-container">
+                            <img class="planet-img" ng-src="{{getPlanetImgSrc(planet)}}" style="{{getPlanetImgStyle(planet)}}" />
+                        </div>
                     </div>
-                    <div id="status-@planet.Id">
-                        @if (planet.Buildings.Any(b => b.ConstructionEndTime > DateTime.UtcNow))
-                        {
-                            var buildingInProgress = planet.Buildings.FirstOrDefault(b => b.ConstructionEndTime > DateTime.UtcNow);
-                            <div class="card-header progress-header bg-primary">
-                                <div>
-                                    <strong>@buildingInProgress.Name</strong> - Building...
-                                    <br />
-                                    Done at: @buildingInProgress.ConstructionEndTime?.ToLocalTime()
-                                </div>
-                                <form method="post" asp-action="Cancel" asp-controller="Building" class="d-inline">
-                                    <input type="hidden" name="buildingId" value="@buildingInProgress.Id" />
-                                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
-                                </form>
+                    <div class="planet-list-item-body">
+                        <div class="d-flex">
+                            <h5>{{planet.name}}</h5>
+                        </div>
+                        <div>
+                            <p class="heading-text-secondary">Resources</p>
+                            <div class="d-flex">
+                                <span class="badge rounded-pill bg-iron me-1"><sci-number value="planet.iron"></sci-number> Fe</span>
+                                <span class="badge rounded-pill bg-silver me-1"><sci-number value="planet.silver"></sci-number> Ag</span>
+                                <span class="badge rounded-pill bg-aluminum me-1"><sci-number value="planet.aluminium"></sci-number> Al</span>
+                                <span class="badge rounded-pill bg-h2 me-1"><sci-number value="planet.h2"></sci-number> H<span class="small">2</span></span>
+                                <span class="badge rounded-pill bg-energy"><sci-number value="planet.iron"></sci-number> <i class="fas fa-bolt"></i></span>
                             </div>
-                        }
-                        else
-                        {
-                            <div class="card-header no-progress-header bg-warning">
-                                <strong>Nothing is being built</strong>
-                                <button class="btn btn-sm btn-light build-button float-right" onclick="location.href='@Url.Action("Build", "Building", new { planetId = planet.Id })'">Build</button>
-                            </div>
-                        }
+                        </div>
                     </div>
-                    <div class="card-body" id="details-@planet.Id">
-                        <div class="section-header" onclick="toggleSection('planet-info-@planet.Id')">Planet Info</div>
-                        <hr />
-                        <div class="collapsible section-content" id="planet-info-@planet.Id">
-                            <p class="mb-1"><strong>Speed:</strong> @planet.RelativeSpeed%</p>
-                            <p class="mb-1"><strong>Resource Output:</strong> @planet.RelativeIronOutput% Iron, @planet.RelativeSilverOutput% Silver, @planet.RelativeAluminiumOutput% Aluminium, @planet.RelativeH2Output% H2, @planet.RelativeEnergyOutput% Energy</p>
-                            <button class="btn btn-primary btn-sm mt-2" onclick="location.href='@Url.Action("Edit", "Planet", new { planetId = planet.Id })'">Edit Planet</button>
-                        </div>
-
-                        <div class="section-header" onclick="toggleSection('resources-@planet.Id')">Resources</div>
-                        <hr />
-                        <div class="collapsible section-content" id="resources-@planet.Id">
-                            <p class="mb-1"><strong>Iron:</strong> @planet.Iron</p>
-                            <p class="mb-1"><strong>Silver:</strong> @planet.Silver</p>
-                            <p class="mb-1"><strong>Aluminium:</strong> @planet.Aluminium</p>
-                            <p class="mb-1"><strong>H2:</strong> @planet.H2</p>
-                            <p class="mb-1"><strong>Energy:</strong> @planet.Energy</p>
-                        </div>
-
-                        <div class="section-header" onclick="toggleSection('buildings-@planet.Id')">Buildings</div>
-                        <hr />
-                        <div class="collapsible section-content" id="buildings-@planet.Id">
-                            <ul class="list-unstyled">
-                                @foreach (var building in planet.Buildings)
-                                {
-                                    <li>
-                                        @if (building.ConstructionEndTime == null || building.ConstructionEndTime <= DateTime.UtcNow)
-                                        {
-                                            <div>@building.Name</div>
-                                            <div>Level @building.Level</div>
-                                        }
-                                        else
-                                        {
-                                            <div class="building-name">@building.Name</div>
-                                            <div>Level @building.Level - 1 - Upgrading... +1</div>
-                                        }
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-
-                        <div class="section-header" onclick="toggleSection('fleets-@planet.Id')">Fleets</div>
-                        <hr />
-                        <div class="collapsible section-content" id="fleets-@planet.Id">
-                            <ul class="list-unstyled">
-                                <li>Fleet 1</li>
-                                <li>Fleet 2</li>
-                                <li>Fleet 3</li>
-                            </ul>
+                </div>
+                <div class="d-flex">
+                    <div class="planet-list-item-body">
+                        <div>
+                            <p class="heading-text-secondary">Buildings</p>
+                            <div ng-repeat="building in planet.buildings">
+                                <p class="building-label">{{building.name}}<span class="badge rounded-pill bg-lowlight text-lowlight ms-2">Level {{building.level}}</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        }
+            <div class="planet-list-item-showmore">
+                <i class="fas fa-chevron-right fa-xl"></i>
+            </div>
+        </div>
     </div>
-}
-else
-{
-    <p>You have no planets yet.</p>
-}
+    <div class="planet-form">
+        <div>
+            <a href="#" class="btn btn-secondary" ng-click="selectPlanet(null)"><i class="fas fa-arrow-left"></i> Back to Planets</a>
+        </div>
+        <div class="d-flex flex-wrap">
+            <div class="planet-form-item-img">
+                <div class="planet-img-container">
+                    <img class="planet-img" ng-src="{{getPlanetImgSrc(selectedPlanet)}}" style="{{getPlanetImgStyle(selectedPlanet)}}" />
+                </div>
+            </div>
+            <div>
+                <h2>{{selectedPlanet.name}}</h2>
+                <div>
+                    <p class="heading-text-secondary">Resources</p>
+                    <div class="d-flex mb-3">
+                        <span class="badge rounded-pill bg-iron me-1"><sci-number value="selectedPlanet.iron"></sci-number> Fe</span>
+                        <span class="badge rounded-pill bg-silver me-1"><sci-number value="selectedPlanet.silver"></sci-number> Ag</span>
+                        <span class="badge rounded-pill bg-aluminum me-1"><sci-number value="selectedPlanet.aluminium"></sci-number> Al</span>
+                        <span class="badge rounded-pill bg-h2 me-1"><sci-number value="selectedPlanet.h2"></sci-number> H<span class="small">2</span></span>
+                        <span class="badge rounded-pill bg-energy"><sci-number value="selectedPlanet.iron"></sci-number> <i class="fas fa-bolt"></i></span>
+                    </div>
+                </div>
+                <div>
+                    <p class="heading-text-primary">Info</p>
+                    <p class="heading-text-secondary">Relative speed</p>
+                    <div class="mb-2">
+                        <span class="badge rounded-pill bg-completion"><i class="fas fa-clock"></i> : {{selectedPlanet.relativeSpeed}}%</span>
+                    </div>
+                    <p class="heading-text-secondary">Relative resource output</p>
+                    <div class="d-flex">
+                        <span class="badge rounded-pill bg-iron me-1">Fe : {{selectedPlanet.relativeIronOutput}}%</span>
+                        <span class="badge rounded-pill bg-silver me-1">Ag : {{selectedPlanet.relativeSilverOutput}}%</span>
+                        <span class="badge rounded-pill bg-aluminum me-1">Al : {{selectedPlanet.relativeAluminiumOutput}}%</span>
+                        <span class="badge rounded-pill bg-h2 me-1">H<span class="small">2</span> : {{selectedPlanet.relativeH2Output}}%</span>
+                        <span class="badge rounded-pill bg-energy"><i class="fas fa-bolt"></i> : {{selectedPlanet.relativeEnergyOutput}}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="form-seperator" />
 
-@section Scripts {
-    <script>
-        function toggleDetails(planetId) {
-            var details = document.getElementById('details-' + planetId);
-            if (details.style.display === 'none' || details.style.display === '') {
-                details.style.display = 'block';
-                localStorage.setItem('planet-' + planetId, 'expanded');
-            } else {
-                details.style.display = 'none';
-                localStorage.setItem('planet-' + planetId, 'collapsed');
-            }
-        }
-
-        function restoreDetailsState(planetId) {
-            var state = localStorage.getItem('planet-' + planetId);
-            var details = document.getElementById('details-' + planetId);
-            if (state === 'expanded') {
-                details.style.display = 'block';
-            } else {
-                details.style.display = 'none';
-            }
-        }
-
-        function toggleSection(sectionId) {
-            var section = document.getElementById(sectionId);
-            if (section.style.display === 'none' || section.style.display === '') {
-                section.style.display = 'block';
-                localStorage.setItem(sectionId, 'expanded');
-            } else {
-                section.style.display = 'none';
-                localStorage.setItem(sectionId, 'collapsed');
-            }
-        }
-
-        function restoreSectionState(sectionId) {
-            var state = localStorage.getItem(sectionId);
-            var section = document.getElementById(sectionId);
-            if (state === 'expanded') {
-                section.style.display = 'block';
-            } else {
-                section.style.display = 'none';
-            }
-        }
-
-        function updatePlanetStatus(planetId) {
-            fetch('/Home/GetPlanetStatus?planetId=' + planetId)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.building) {
-                        document.getElementById('status-' + planetId).innerHTML = `
-                                            <div class="card-header progress-header bg-primary">
-                                                <div>
-                                                    <strong>${data.building.Name}</strong> - Building...
-                                                    <br />
-                                                    Done at: ${new Date(data.building.ConstructionEndTime).toLocaleString()}
-                                                </div>
-                                                <form method="post" action="/Building/Cancel" class="d-inline">
-                                                    <input type="hidden" name="buildingId" value="${data.building.Id}" />
-                                                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
-                                                </form>
-                                            </div>
-                                        `;
-                    } else {
-                        location.reload(); // Reload the page when a building is completed
-                    }
-                })
-                .catch(error => console.error('Error fetching planet status:', error));
-        }
-
-        function startUpdatingPlanets() {
-        @foreach (var planet in Model.Planets)
-        {
-            <text>
-                    setInterval(function () {
-                        updatePlanetStatus(@planet.Id);
-                    }, 15000); // Update every 15 seconds, same as res tick
-                restoreDetailsState(@planet.Id);
-                restoreSectionState('planet-info-@planet.Id');
-                restoreSectionState('resources-@planet.Id');
-                restoreSectionState('buildings-@planet.Id');
-                restoreSectionState('fleets-@planet.Id');
-            </text>
-        }
-                }
-
-        document.addEventListener("DOMContentLoaded", startUpdatingPlanets);
-    </script>
-}
+        <h3>Buildings</h3>
+        <div class="page-list">
+            <div class="planet-list-item hover-bg-border-gradient-1" ng-repeat="building in selectedPlanet.buildings">
+                <div class="d-flex">
+                    <div class="page-list-item-img">
+                        <div class="building-img-container">
+                            <img class="building-img" ng-src="{{getBuildingImgSrc(building)}}" />
+                        </div>
+                    </div>
+                    <div class="planet-list-item-body">
+                        <div class="d-flex">
+                            <h5>{{building.name}}<span class="badge rounded-pill bg-primary ms-2">Level {{building.level}}</span></h5>
+                        </div>
+                        <div>
+                            <p class="heading-text-secondary">Resources</p>
+                            <div class="d-flex">
+                                <span class="badge rounded-pill bg-iron me-1"><sci-number value="planet.iron"></sci-number> Fe</span>
+                                <span class="badge rounded-pill bg-silver me-1"><sci-number value="planet.silver"></sci-number> Ag</span>
+                                <span class="badge rounded-pill bg-aluminum me-1"><sci-number value="planet.aluminium"></sci-number> Al</span>
+                                <span class="badge rounded-pill bg-h2 me-1"><sci-number value="planet.h2"></sci-number> H<span class="small">2</span></span>
+                                <span class="badge rounded-pill bg-energy"><sci-number value="planet.iron"></sci-number> <i class="fas fa-bolt"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
