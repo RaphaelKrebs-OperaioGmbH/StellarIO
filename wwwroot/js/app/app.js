@@ -1,6 +1,14 @@
 ﻿var app = angular.module("stellarIO", ["stellarService"]);
 
 
+app.controller("galaxyController", ["$scope", "galaxyService", "planetService", function ($scope, galaxyController, planetService) {
+    $scope.getPlanetImgStyle = function (planet) {
+        return planetService.getPlanetImgStyle(planet);
+    }
+    $scope.getPlanetImgSrc = function (planet) {
+        return planetService.getPlanetImgUrl(planet);
+    }
+}]);
 
 app.controller("dashboardController", ["$scope", "$interval", "planetService", "buildingService", function ($scope, $interval, planetService, buildingService) {
     

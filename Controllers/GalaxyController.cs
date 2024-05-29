@@ -1,34 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StellarIO.Models;
+using StellarIO.Services;
 using System.Linq;
 
 public class GalaxyController : Controller
 {
-    private readonly ApplicationDbContext _context;
+    private readonly GalaxyService _galaxyService;
 
-    public GalaxyController(ApplicationDbContext context)
+    public GalaxyController(GalaxyService galaxyService)
     {
-        _context = context;
+        _galaxyService = galaxyService;
     }
 
     public IActionResult Index()
     {
-        var galaxy = _context.Galaxies
-            .Select(g => new GalaxyViewModel
-            {
-                Name = g.Name,
-                Systems = g.Systems.Select(s => new GalaxySystemViewModel
-                {
-                    Id = s.Id,
-                    Planets = s.Planets.Select(p => new PlanetViewModel
-                    {
-                        Name = p.Name,
-                        Owner = p.User != null ? p.User.UserName : "Unowned",
-                        Coordinates = $"{g.Id}:{s.Id}:{p.Id}"
-                    }).ToList()
-                }).ToList()
-            }).FirstOrDefault();
-
+        var galaxy = _galaxyService.GetGalaxies().AsViewModel().FirstOrDefault();
         return View(galaxy);
     }
 }

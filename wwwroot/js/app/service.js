@@ -101,18 +101,18 @@ appService.service("planetService", ["$http", "$q", "stellarApi", function ($htt
             return stellarApi.get("planet/" + planetId + "/building/options")
         },
         startConstruction: function (planetId, buildingName) {
-            return stellarApi.post("planet/" + planetId + "/building", '"' + buildingName + '"' );
+            return stellarApi.post("planet/" + planetId + "/building", '"' + buildingName + '"');
         },
         getPlanetImgUrl: function (planet) {
             if (!planet) {
                 return "";
             }
             var seed = planet.id + 1;
-            var x = Math.sin(seed++) * (planetImagesCount -1);
+            var x = Math.sin(seed++) * (planetImagesCount - 1);
             if (x < 0) {
                 x = x * -1;
             }
-            x = Math.floor(x+1);
+            x = Math.floor(x + 1);
             return "/img/planet/p" + x + ".jpeg";
         },
         getPlanetImgStyle: function (planet) {
@@ -128,7 +128,7 @@ appService.service("planetService", ["$http", "$q", "stellarApi", function ($htt
             return "filter: saturate(200%) brightness(100%) hue-rotate(" + x + "deg);"
         }
     }
-}])
+}]);
 
 appService.service("buildingService", ["$http", "$q", "stellarApi", function ($http, $q, stellarApi) {
     return {
@@ -136,4 +136,15 @@ appService.service("buildingService", ["$http", "$q", "stellarApi", function ($h
             return stellarApi.get("building/" + buildingId + "/cancel");
         }
     }
-}])
+}]);
+
+appService.service("galaxyService", ["$http", "$q", "stellarApi", function ($http, $q, stellarApi) {
+    return {
+        getGalaxies: function () {
+            return stellarApi.get("galaxy");
+        },
+        getGalaxy: function (id) {
+            return stellarApi.get("galaxy/" + id);
+        }
+    }
+}]);
