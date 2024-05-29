@@ -145,5 +145,26 @@ namespace StellarIO.Services
             await _context.SaveChangesAsync();
 
         }
+
+        public async Task AssignPlanetToNewUserAsync(User user)
+        {
+            var planet = await _context.Planets
+                .Where(p => p.UserId == null)
+                .FirstOrDefaultAsync();
+
+            if (planet != null)
+            {
+                planet.UserId = user.Id;
+                planet.User = user;
+                _context.Planets.Update(planet);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Planet {PlanetId} assigned to newly registered user {UserId}.", planet.Id, user.Id);
+            }
+            else
+            {
+                _logger.LogWarning("No unassigned planets available.");
+                throw new InvalidOperationException("No unassigned planets available.");
+            }
+        }
     }
 }
