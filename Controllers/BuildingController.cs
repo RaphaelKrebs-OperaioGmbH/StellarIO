@@ -62,88 +62,19 @@ public class BuildingController : Controller
 
         if (ModelState.IsValid)
         {
-            var planet = await _planetService.GetPlanetAsync(model.PlanetId);
-            if (planet == null)
+            try
             {
-                _logger.LogWarning("Planet not found.");
-                return NotFound("Planet not found.");
+                await _planetService.ConstructBuildingAsync(model.PlanetId, model.SelectedBuilding);
+                return RedirectToAction("Dashboard", "Home");
             }
-
-            // Check if there's already a building in progress
-            if (planet.Buildings.Any(b => b.ConstructionEndTime > DateTime.UtcNow))
+            catch (KeyNotFoundException e)
             {
-                _logger.LogWarning("A building is already in progress.");
-                ModelState.AddModelError("", "A building is already in progress on this planet.");
-                return View(model);
+                return NotFound(e.Message);
             }
-
-            var selectedBuildingType = BuildService.GetBuildingTypes().FirstOrDefault(b => b.Name == model.SelectedBuilding);
-            if (selectedBuildingType == null)
+            catch (BadHttpRequestException e)
             {
-                _logger.LogWarning("Building type not found.");
-                return NotFound("Building type not found.");
+                return BadRequest(e.Message);
             }
-
-            if (!BuildService.CheckBuildingRequirements(planet, selectedBuildingType.Name))
-            {
-                _logger.LogWarning("Building requirements not met.");
-                ModelState.AddModelError("", "Building requirements not met.");
-                return View(model);
-            }
-
-            var existingBuilding = planet.Buildings.FirstOrDefault(b => b.Name == model.SelectedBuilding);
-            int level = existingBuilding != null ? existingBuilding.Level + 1 : 1;
-
-            // Recalculate costs based on building level
-            var recalculatedCosts = BuildService.RecalculateCosts(selectedBuildingType, level);
-
-            // Check if the planet has enough resources
-            if (planet.Iron < recalculatedCosts.IronCost ||
-                planet.Silver < recalculatedCosts.SilverCost ||
-                planet.Aluminium < recalculatedCosts.AluminiumCost ||
-                planet.H2 < recalculatedCosts.H2Cost ||
-                planet.Energy < recalculatedCosts.EnergyCost)
-            {
-                _logger.LogWarning("Not enough resources to build this building.");
-                ModelState.AddModelError("", "Not enough resources to build this building.");
-                return View(model);
-            }
-
-            // Deduct resources from the planet
-            planet.Iron -= recalculatedCosts.IronCost;
-            planet.Silver -= recalculatedCosts.SilverCost;
-            planet.Aluminium -= recalculatedCosts.AluminiumCost;
-            planet.H2 -= recalculatedCosts.H2Cost;
-            planet.Energy -= recalculatedCosts.EnergyCost;
-
-            if (existingBuilding != null)
-            {
-                existingBuilding.Level++;
-                existingBuilding.ConstructionEndTime = DateTime.UtcNow.AddSeconds(recalculatedCosts.Duration);
-            }
-            else
-            {
-                var building = new Building
-                {
-                    Name = model.SelectedBuilding,
-                    PlanetId = model.PlanetId,
-                    IronCost = recalculatedCosts.IronCost,
-                    SilverCost = recalculatedCosts.SilverCost,
-                    AluminiumCost = recalculatedCosts.AluminiumCost,
-                    H2Cost = recalculatedCosts.H2Cost,
-                    EnergyCost = recalculatedCosts.EnergyCost,
-                    Level = 1,
-                    ConstructionEndTime = DateTime.UtcNow.AddSeconds(recalculatedCosts.Duration),
-                    Description = selectedBuildingType.Description
-                };
-
-                _context.Buildings.Add(building);
-            }
-
-            await _context.SaveChangesAsync();
-            _logger.LogInformation("Building added/updated successfully.");
-
-            return RedirectToAction("Dashboard", "Home");
         }
         else
         {

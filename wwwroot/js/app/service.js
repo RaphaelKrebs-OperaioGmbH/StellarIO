@@ -97,7 +97,16 @@ appService.service("planetService", ["$http", "$q", "stellarApi", function ($htt
         getPlanet: function (planetId) {
             return stellarApi.get("planet/" + planetId);
         },
+        getBuildingOptions: function (planetId) {
+            return stellarApi.get("planet/" + planetId + "/building/options")
+        },
+        startConstruction: function (planetId, buildingName) {
+            return stellarApi.post("planet/" + planetId + "/building", '"' + buildingName + '"' );
+        },
         getPlanetImgUrl: function (planet) {
+            if (!planet) {
+                return "";
+            }
             var seed = planet.id + 1;
             var x = Math.sin(seed++) * (planetImagesCount -1);
             if (x < 0) {
@@ -107,6 +116,9 @@ appService.service("planetService", ["$http", "$q", "stellarApi", function ($htt
             return "/img/planet/p" + x + ".jpeg";
         },
         getPlanetImgStyle: function (planet) {
+            if (!planet) {
+                return "";
+            }
             var seed = planet.id + 1;
             var x = Math.sin(seed++) * 360;
             if (x < 0) {
@@ -114,6 +126,14 @@ appService.service("planetService", ["$http", "$q", "stellarApi", function ($htt
             }
             x = Math.floor(x + 1);
             return "filter: saturate(200%) brightness(100%) hue-rotate(" + x + "deg);"
+        }
+    }
+}])
+
+appService.service("buildingService", ["$http", "$q", "stellarApi", function ($http, $q, stellarApi) {
+    return {
+        cancelConstruction: function (buildingId) {
+            return stellarApi.get("building/" + buildingId + "/cancel");
         }
     }
 }])

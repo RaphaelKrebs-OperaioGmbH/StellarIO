@@ -37,7 +37,7 @@ public class HomeController : Controller
     {
         if (User.Identity.IsAuthenticated)
         {
-            return RedirectToAction("Loading");
+            return RedirectToAction("Dashboard");
         }
 
         return View();
@@ -114,15 +114,7 @@ public class HomeController : Controller
                 return RedirectToAction("Index");
             }
 
-            var planets = await _planetService.GetPlanetsOwnedByUser(user.Id).ToListAsync();
-
-            var model = new DashboardViewModel
-            {
-                Points = user.Points,
-                Planets = planets
-            };
-
-            return View(model);
+            return View();
         }
         catch (Exception ex)
         {
