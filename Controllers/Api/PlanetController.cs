@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using StellarIO.Models;
 using StellarIO.Services;
@@ -77,7 +78,7 @@ namespace StellarIO.Controllers.Api
         /// </summary>
         /// <param name="planetId">Id of the planet to get the building options for</param>
         /// <returns>List of building options</returns>
-        [HttpGet("{planetId}/buildoptions")]
+        [HttpGet("{planetId}/building/options")]
         public async Task<ActionResult<List<BuildingOption>>> GetBuildingOptions(int planetId)
         {
             try
@@ -87,6 +88,32 @@ namespace StellarIO.Controllers.Api
             catch (KeyNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Starts construction of a building on a planet.
+        /// And as usual... there should be security added later... Right now, anyone can start
+        /// any construction on any planet :)
+        /// </summary>
+        /// <param name="planetId">Id of the planet to start building on</param>
+        /// <param name="buildingName">Name of the building to build/upgrade</param>
+        /// <returns>Created Status, Not Found Status, Bad Request Status</returns>
+        [HttpPost("{planetId}/building")]
+        public async Task<ActionResult> StartConstruction([FromRoute] int planetId, [FromBody] string buildingName)
+        {
+            try
+            {
+                await _planetService.ConstructBuildingAsync(planetId, buildingName);
+                return Created();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
             }
         }
     }

@@ -39,8 +39,27 @@ body {
     background: linear-gradient(rgba(10, 15, 20, 0.95), rgba(10, 20, 15, 0.8), rgba(20, 10, 15, 0.95)) padding-box, linear-gradient(-95deg, rgba(0,0,139,0.3), rgba(153, 50, 204, 0.3)) border-box;
 }
 
+
+.modal-content,
+.card {
+    border: 1px solid transparent;
+    background: linear-gradient(rgba(10, 15, 20, 0.9), rgba(10, 20, 15, 0.7), rgba(20, 10, 15, 0.9)) padding-box, linear-gradient(-95deg, rgba(0,0,70,1), rgba(76, 25, 102, 1)) border-box;
+}
+
+.btn.btn-primary:hover {
+    color: #bfc4c9;
+    border: 1px solid transparent;
+    background: linear-gradient(rgba(10, 15, 20, 0.3), rgba(10, 20, 15, 0.2), rgba(20, 10, 15, 0.3)) padding-box, linear-gradient(85deg, rgba(0,0,139,0.9), rgba(153, 50, 204, 0.9)) border-box;
+}
+
+    .btn.btn-primary{
+        color: white;
+        border: 1px solid transparent;
+        background: linear-gradient(rgba(10, 15, 20, 0.5), rgba(10, 20, 15, 0.4), rgba(20, 10, 15, 0.5)) padding-box, linear-gradient(85deg, rgba(0,0,139,1), rgba(153, 50, 204, 1)) border-box;
+    }
+
 .btn.btn-secondary {
-    color: #80878f;
+    color: white;
     border: 1px solid transparent;
     background: linear-gradient(rgba(10, 15, 20, 0.8), rgba(10, 20, 15, 0.7), rgba(20, 10, 15, 0.8)) padding-box, linear-gradient(-95deg, rgba(0,0,139,0.5), rgba(153, 50, 204, 0.5)) border-box;
 }
@@ -49,7 +68,7 @@ body {
     border: 1px solid transparent;
     background: linear-gradient(rgba(10, 15, 20, 0.5), rgba(10, 20, 15, 0.4), rgba(20, 10, 15, 0.5)) padding-box, linear-gradient(-95deg, rgba(0,0,139,0.5), rgba(153, 50, 204, 0.5)) border-box;
 }
-.btn.btn-secondary {
+.btn {
     box-shadow: none!important;
 }
 
@@ -319,12 +338,44 @@ html {
     position: relative;
     overflow: hidden;
 }
-
-.progress-header {
-    background-color: #ffc107;
-    color: black;
+.building-modal .modal-header {
+    padding: 10px;
     position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    padding: 0px;
+    min-height: 67px;
+    border-bottom: 1px dashed #566171;
 }
+
+.building-modal .modal-footer {
+    border-top: 1px dashed #566171;
+    justify-content: space-between;
+}
+.building-modal .modal-header img {
+    width: 100%;
+    height: auto;
+}
+
+    .building-modal .modal-header .header-content {
+        position: absolute;
+        bottom: 0;
+        background-color: rgba(var(--bs-dark-rgb), 0.8);
+        padding: 10px;
+        width: 100%;
+    }
+
+        .building-modal .modal-header .header-content .badge {
+            position: absolute;
+            top: -10px;
+            right: 8px;
+        }
+    .progress-header {
+        background-color: #ffc107;
+        color: black;
+        position: relative;
+    }
 
     .progress-header::before {
         content: "";

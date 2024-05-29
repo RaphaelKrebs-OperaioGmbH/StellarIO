@@ -38,7 +38,10 @@
                         <div>
                             <p class="heading-text-secondary">Buildings</p>
                             <div ng-repeat="building in planet.buildings">
-                                <p class="building-label">{{building.name}}<span class="badge rounded-pill bg-lowlight text-lowlight ms-2">Level {{building.level}}</span></p>
+                                <p class="building-label">{{building.name}}
+                                    <span ng-if="!isInProgress(planet, building.name)" class="badge rounded-pill bg-lowlight text-lowlight ms-2">Level {{building.level}}</span>
+                                    <span ng-if="isInProgress(planet, building.name)" class="badge rounded-pill bg-primary progress-bar-striped progress-bar-animated ms-2">Level {{building.level - 1}} <i class="fas fa-arrow-right"></i> {{building.level}} (<time-countdown end-time="building.constructionEndTime"></time-countdown>)</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -92,7 +95,7 @@
 
         <h3>Buildings</h3>
         <div class="page-list">
-            <div class="planet-list-item hover-bg-border-gradient-1" ng-repeat="building in selectedPlanet.buildings">
+            <div class="planet-list-item hover-bg-border-gradient-1" ng-repeat="building in currentBuildingOptions" ng-click="selectBuildingOption(building)" data-bs-toggle="modal" data-bs-target="#buildingOptionModal">
                 <div class="d-flex">
                     <div class="page-list-item-img">
                         <div class="building-img-container">
@@ -101,18 +104,55 @@
                     </div>
                     <div class="planet-list-item-body">
                         <div class="d-flex">
-                            <h5>{{building.name}}<span class="badge rounded-pill bg-primary ms-2">Level {{building.level}}</span></h5>
+                            <h5>{{building.name}}
+                                <span ng-if="!isInProgress(selectedPlanet, building.name)" class="badge rounded-pill ms-2" ng-class="{'bg-primary': building.level > 1, 'bg-lowlight': building.level <= 1}">Level {{building.level-1}}</span>
+                                <span ng-if="isInProgress(selectedPlanet, building.name)" class="badge rounded-pill ms-2 progress-bar-striped progress-bar-animated bg-primary">Level {{building.level-2}} <i class="fas fa-arrow-right"></i> {{building.level-1}} (<time-countdown end-time="getBuildingByName(selectedPlanet, building.name).constructionEndTime"></time-countdown>)</span>
+                            </h5>
                         </div>
                         <div>
-                            <p class="heading-text-secondary">Resources</p>
-                            <div class="d-flex">
-                                <span class="badge rounded-pill bg-iron me-1"><sci-number value="planet.iron"></sci-number> Fe</span>
-                                <span class="badge rounded-pill bg-silver me-1"><sci-number value="planet.silver"></sci-number> Ag</span>
-                                <span class="badge rounded-pill bg-aluminum me-1"><sci-number value="planet.aluminium"></sci-number> Al</span>
-                                <span class="badge rounded-pill bg-h2 me-1"><sci-number value="planet.h2"></sci-number> H<span class="small">2</span></span>
-                                <span class="badge rounded-pill bg-energy"><sci-number value="planet.iron"></sci-number> <i class="fas fa-bolt"></i></span>
-                            </div>
+                            <p class="text-lowlight">{{building.description}}</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="buildingOptionModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog building-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <img ng-src="{{getBuildingImgSrc(selectedBuildingOption)}}" />
+                        <div class="header-content">
+                            <h5 class="modal-title text-light">{{selectedBuildingOption.name}}</h5>
+                            <span ng-if="!isInProgress(selectedPlanet, selectedBuildingOption.name)" class="badge rounded-pill" ng-class="{'bg-primary': selectedBuildingOption.level > 1, 'bg-lowlight': selectedBuildingOption.level <= 1}">Level {{selectedBuildingOption.level-1}}</span>
+                            <span ng-if="isInProgress(selectedPlanet, selectedBuildingOption.name)" class="badge rounded-pill progress-bar-striped progress-bar-animated bg-primary">Level {{selectedBuildingOption.level-2}} <i class="fas fa-arrow-right"></i> {{selectedBuildingOption.level-1}} (<time-countdown end-time="getBuildingByName(selectedPlanet, selectedBuildingOption.name).constructionEndTime"></time-countdown>)</span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-lowlight">{{selectedBuildingOption.description}}</p>
+                        <p class="heading-text-secondary"><span ng-if="selectedBuildingOption.level <= 1">Construction</span><span ng-if="selectedBuildingOption.level > 1">Upgrade</span> costs</p>
+                        <div class="d-flex mb-3">
+                            <span class="badge rounded-pill bg-iron me-1"><sci-number value="selectedBuildingOption.ironCost"></sci-number> Fe</span>
+                            <span class="badge rounded-pill bg-silver me-1"><sci-number value="selectedBuildingOption.silverCost"></sci-number> Ag</span>
+                            <span class="badge rounded-pill bg-aluminum me-1"><sci-number value="selectedBuildingOption.aluminiumCost"></sci-number> Al</span>
+                            <span class="badge rounded-pill bg-h2 me-1"><sci-number value="selectedBuildingOption.h2Cost"></sci-number> H<span class="small">2</span></span>
+                            <span class="badge rounded-pill bg-energy"><sci-number value="selectedBuildingOption.energyCost"></sci-number> <i class="fas fa-bolt"></i></span>
+                        </div>
+                        <p class="heading-text-secondary"><span ng-if="selectedBuildingOption.level <= 1">Construction</span><span ng-if="selectedBuildingOption.level > 1">Upgrade</span> duration</p>
+                        <div class="d-flex mb-3">
+                            <span class="badge rounded-pill bg-duration me-1"><i class="fas fa-hourglass-half"></i> <time-duration seconds="selectedBuildingOption.duration"></time-duration></span>
+                            <span class="badge rounded-pill bg-completion me-1"><i class="fas fa-clock"></i> <time-countup seconds="selectedBuildingOption.duration"></time-countup></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" ng-click="startConstruction(selectedPlanet, selectedBuildingOption)" ng-if="!isInProgress(selectedPlanet, selectedBuildingOption.name)" ng-disabled="isAnyInProgress(selectedPlanet)">
+                            <span ng-if="selectedBuildingOption.level <= 1">Start Construction</span>
+                            <span ng-if="selectedBuildingOption.level > 1">Upgrade to level {{selectedBuildingOption.level}}</span>
+                        </button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" ng-click="stopConstruction(selectedPlanet, selectedBuildingOption)" ng-if="isInProgress(selectedPlanet, selectedBuildingOption.name) ">
+                            <span ng-if="selectedBuildingOption.level <= 2">Abort Construction</span>
+                            <span ng-if="selectedBuildingOption.level > 2">Abort Upgrade</span>
+                        </button>
                     </div>
                 </div>
             </div>

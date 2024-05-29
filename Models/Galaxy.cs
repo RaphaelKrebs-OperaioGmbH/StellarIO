@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<GalaxySystem> Systems { get; set; } = new List<GalaxySystem>();
+        public IEnumerable<GalaxySystem> Systems { get; set; } = new List<GalaxySystem>();
     }
 
 }
