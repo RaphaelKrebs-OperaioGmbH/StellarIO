@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using StellarIO.Services;
+using StellarIO.ViewModels;
 
 public class HomeController : Controller
 {

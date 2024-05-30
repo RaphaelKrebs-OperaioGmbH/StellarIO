@@ -146,6 +146,49 @@ app.controller("dashboardController", ["$scope", "$interval", "planetService", "
         })
     }
 }]);
+app.controller("accountController", ["$scope", "stellarApi", function ($scope, stellarApi) {
+    $scope.login = function () {
+        var data = {
+            email: $scope.email,
+            password: $scope.password,
+            rememberMe: $scope.rememberMe
+        };
+
+        stellarApi.login(data).then(function (response) {
+            console.log('Login successful', response);
+            window.location.href = '/Home/Index';
+        }, function (error) {
+            console.log('Login error', error);
+            alert('Error: ' + error.data);
+        });
+    };
+
+    $scope.logout = function () {
+        stellarApi.logout().then(function (response) {
+            console.log('Logout successful', response);
+            window.location.href = '/Home/Index';
+        }, function (error) {
+            console.log('Logout error', error);
+            alert('Error: ' + error.data);
+        });
+    };
+
+    $scope.register = function () {
+        var data = {
+            email: $scope.registerEmail,
+            password: $scope.registerPassword,
+            confirmPassword: $scope.registerConfirmPassword
+        };
+
+        stellarApi.register(data).then(function (response) {
+            console.log('Registration successful', response);
+            window.location.href = '/Home/Index';
+        }, function (error) {
+            console.log('Registration error', error);
+            alert('Error: ' + error.data);
+        });
+    };
+}]);
 
 app.directive("sciNumber", [function () {
     const steps = ["k", "M", "G", "T", "P"];

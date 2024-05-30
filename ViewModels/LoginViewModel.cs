@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StellarIO.Models
+namespace StellarIO.ViewModels
 {
     public class LoginViewModel
     {

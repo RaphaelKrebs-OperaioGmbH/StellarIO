@@ -81,6 +81,54 @@ appService.service("stellarApi", ["$http", "$q", function ($http, $q) {
             )
 
             return deferred.promise;
+        },
+        logout: function () {
+            var deferred = $q.defer();
+
+            var url = getUrl("account/logout");
+
+            $http.post(url).then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (error) {
+                    deferred.reject(error);
+                }
+            )
+
+            return deferred.promise;
+        },
+        login: function (data) {
+            var deferred = $q.defer();
+
+            var url = getUrl("account/login");
+
+            $http.post(url, data).then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (error) {
+                    deferred.reject(error);
+                }
+            )
+
+            return deferred.promise;
+        },
+        register: function (data) {
+            var deferred = $q.defer();
+
+            var url = getUrl("account/register");
+
+            $http.post(url, data).then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function (error) {
+                    deferred.reject(error);
+                }
+            )
+
+            return deferred.promise;
         }
     }
 }]);
