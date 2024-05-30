@@ -148,6 +148,7 @@ namespace StellarIO.Services
 
         public async Task AssignPlanetToNewUserAsync(User user)
         {
+            _logger.LogInformation("Assigning a planet to the newly registered user {UserId}.", user.Id);
             var planet = await _context.Planets
                 .Where(p => p.UserId == null)
                 .FirstOrDefaultAsync();
@@ -157,6 +158,7 @@ namespace StellarIO.Services
                 planet.UserId = user.Id;
                 planet.User = user;
                 _context.Planets.Update(planet);
+                _logger.LogInformation("Updating planet {PlanetId} with new user {UserId}.", planet.Id, user.Id);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Planet {PlanetId} assigned to newly registered user {UserId}.", planet.Id, user.Id);
             }
