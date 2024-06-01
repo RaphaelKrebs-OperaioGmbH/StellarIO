@@ -15,6 +15,12 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    <nav class="navbar nav-mobile bg-border-gradient-1">
+        <div class="container-fluid">
+            <button type="button" class="btn text-white me-2" data-bs-toggle="modal" data-bs-target="#mobile-nav-modal"><i class="fas fa-bars"></i></button>
+            <span class="navbar-brand mb-0">StellarIO</span>
+        </div>
+    </nav>
     <div class="body-wrapper">
         <aside class="container-nav-desktop">
             <partial name="_NavigationPartial" />
@@ -23,6 +29,15 @@
             <main role="main" class="bg-border-gradient-1">
                 @RenderBody()
             </main>
+        </div>
+    </div>
+    <div class="modal fade mobile-nav-modal" id="mobile-nav-modal" tabindex="-1"aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <partial name="_NavigationPartial" />
+                </div>
+            </div>
         </div>
     </div>
 

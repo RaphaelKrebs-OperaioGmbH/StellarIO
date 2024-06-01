@@ -5,7 +5,7 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: linear-gradient(#131014, #29282d, #121014);
+    background: transparent;
     border-radius: 5px;
 }
 
@@ -151,16 +151,9 @@ body {
     flex-grow: 1;
 }
 
-.main-container main::-webkit-scrollbar { /* WebKit */
-    width: 0;
-    height: 0;
-}
-
     .main-container main {
         height: 100%;
-        overflow: scroll;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* Internet Explorer 10+ */
+        overflow: auto;
         border-radius: 5px;
         border-top-right-radius: 24px;
         border-bottom-right-radius: 24px;
@@ -274,14 +267,6 @@ body {
 .building-img-container .building-img {
     max-height: 150px;
     width: auto;
-}
-@media (max-width: 767px) {
-    html {
-        font-size: 14px;
-    }
-  .container-nav-desktop {
-      display: none;
-  }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -557,6 +542,7 @@ html {
     overflow: hidden;
     padding: 4px;
     cursor: pointer;
+    z-index: 1;
 }
 
     .galaxy-planet:hover {
@@ -584,7 +570,7 @@ html {
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 2;
+    z-index: 3;
     display: flex;
 }
 
@@ -614,3 +600,67 @@ html {
         color: white;
         background: linear-gradient(rgba(10, 15, 20, 0.5), rgba(10, 20, 15, 0.4), rgba(20, 10, 15, 0.5)) padding-box, linear-gradient(85deg, rgba(0,0,139,1), rgba(153, 50, 204, 1)) border-box;
     }
+.nav-mobile {
+    display: none;
+}
+
+.nav-mobile .container-fluid{
+    justify-content: start;
+}
+
+.mobile-nav-modal .modal-dialog {
+    margin: 0 auto 0 0;
+}
+
+.mobile-nav-modal .modal-content {
+    background: linear-gradient(#131014, #29282d, #121014);
+    padding: 0;
+    width: fit-content;
+}
+.mobile-nav-modal .modal-body {
+    padding: 0;
+}
+.mobile-nav-modal .nav {
+    flex-direction: column;
+    height: calc(100dvh - 2px);
+}
+.mobile-nav-modal .nav .nav-footer {
+    margin-top: auto;
+}
+@media (max-width: 991px) {
+
+
+    .container-nav-desktop {
+        display: none;
+    }
+    .nav-mobile {
+        display: flex;
+    }
+    .body-wrapper {
+        height: calc(100dvh - 58px);
+    }
+
+    .galaxy-container {
+        height: calc(100dvh - 5rem - 58px);
+    }
+}
+
+@media (max-width: 767px) {
+    html {
+        font-size: 14px;
+    }
+    .body-wrapper {
+        height: calc(100dvh - 51px);
+    }
+
+    .galaxy-container {
+        height: calc(100dvh - 5rem - 51px);
+    }
+    .main-container {
+        padding: 0;
+    }
+}
+
+@media (max-width: 575px) {
+
+}
