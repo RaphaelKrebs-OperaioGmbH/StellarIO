@@ -1,15 +1,101 @@
 ﻿var app = angular.module("stellarIO", ["stellarService"]);
 
 
-app.controller("galaxyController", ["$scope", "galaxyService", "planetService", function ($scope, galaxyController, planetService) {
+app.controller("galaxyController", ["$scope", "galaxyService", "planetService", function ($scope, galaxyService, planetService) {
     $scope.getPlanetImgStyle = function (planet) {
         return planetService.getPlanetImgStyle(planet);
     }
     $scope.getPlanetImgSrc = function (planet) {
         return planetService.getPlanetImgUrl(planet);
     }
-}]);
 
+    galaxyService.getGalaxies().then(function (galaxies) {
+        $scope.galaxies = galaxies;
+        $scope.selectGalaxy($scope.galaxies[0]);
+    })
+
+    $scope.selectGalaxy = function (galaxy) {
+        galaxyService.getGalaxy(galaxy.id).then(function (galaxy) {
+            $scope.currentGalaxy = galaxy;
+            $scope.selectSystem($scope.currentGalaxy.systems[0]);
+        })
+    }
+    $scope.selectSystem = function (system) {
+        $scope.currentSystem = system;
+    }
+
+    $scope.selectPlanet = function (planet) {
+        $scope.selectedPlanet = planet;
+    }
+
+    $scope.nextSystem = function () {
+        for (var i = 0; i < $scope.currentGalaxy.systems.length; i++) {
+            var system = $scope.currentGalaxy.systems[i];
+            if (system.id == $scope.currentSystem.id) {
+                var next = i + 1;
+                if (next >= $scope.currentGalaxy.systems.length) {
+                    $scope.selectSystem($scope.currentGalaxy.systems[0]);
+                }
+                else {
+                    $scope.selectSystem($scope.currentGalaxy.systems[next]);
+                }
+                break;
+            }
+        }
+    }
+
+    $scope.previousSystem = function () {
+        for (var i = 0; i < $scope.currentGalaxy.systems.length; i++) {
+            var system = $scope.currentGalaxy.systems[i];
+            if (system.id == $scope.currentSystem.id) {
+                var prev = i - 1;
+                if (prev < 0) {
+                    $scope.selectSystem($scope.currentGalaxy.systems[$scope.currentGalaxy.systems.length - 1]);
+                }
+                else {
+                    $scope.selectSystem($scope.currentGalaxy.systems[prev]);
+                }
+                break;
+            }
+        }
+    }
+}]);
+app.directive("galaxyOrbit", [function () {
+    return {
+        restrict: "C",
+        scope: {
+            count: "=",
+            index: "="
+        },
+        link: function (scope, elem, attrs) {
+            var count = scope.count;
+            var current = count - scope.index;
+            var width = "" + parseInt((current / count) * 175).toString() + "%";
+            var height = "" + (parseInt((current / count) * 180)).toString() + "%"
+            elem.css("width", width);
+            elem.css("height", height);
+        }
+    }
+}])
+
+app.directive("galaxyPlanet", ['$window', function ($window) {
+    return {
+        restrict: "C",
+        link: function (scope, elem, attrs) {
+            function setPosition() {
+                var width = elem.parent()[0].clientWidth / 2;
+                var height = elem.parent()[0].clientHeight / 2;
+                var alpha = (Math.PI / 2) - Math.atan(height / width);
+                var x = (Math.sin(alpha) * (width)) + (width);
+                var y = (Math.cos(alpha) * (height)) + (height);
+                elem.css("top", "" + y + "px");
+                elem.css("left", "" + x + "px");
+            }
+            angular.element($window).bind('resize', setPosition);
+            elem.ready(setPosition);
+        }
+    }
+}])
 app.controller("dashboardController", ["$scope", "$interval", "planetService", "buildingService", function ($scope, $interval, planetService, buildingService) {
     
     function loadPlanets(selectedPlanetId) {

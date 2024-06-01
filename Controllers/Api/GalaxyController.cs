@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StellarIO.Models;
 using StellarIO.Services;
 
 namespace StellarIO.Controllers.Api
@@ -20,15 +21,15 @@ namespace StellarIO.Controllers.Api
         }
 
         [HttpGet]
-        public IEnumerable<GalaxyViewModel> Get() 
+        public IEnumerable<Galaxy> Get() 
         {
-            return _galaxyService.GetGalaxies().AsViewModel();
+            return _galaxyService.GetGalaxies();
         }
 
         [HttpGet("{galaxyId}")]
         public ActionResult<GalaxyViewModel> GetGalaxy(int galaxyId)
         {
-            var galaxy = _galaxyService.GetGalaxies().Where(g => g.Id == galaxyId).AsViewModel().FirstOrDefault();
+            var galaxy = _galaxyService.GetGalaxiesFull().Where(g => g.Id == galaxyId).AsViewModel().FirstOrDefault();
             if (galaxy == null)
             {
                 return NotFound($"Galaxy with Id {galaxyId} not found");

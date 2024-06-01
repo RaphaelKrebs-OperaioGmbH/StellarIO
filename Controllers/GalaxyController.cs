@@ -14,7 +14,7 @@ public class GalaxyController : Controller
 
     public IActionResult Index()
     {
-        var galaxy = _galaxyService.GetGalaxies().AsViewModel().FirstOrDefault();
+        var galaxy = _galaxyService.GetGalaxiesFull().AsViewModel().FirstOrDefault();
         return View(galaxy);
     }
 }

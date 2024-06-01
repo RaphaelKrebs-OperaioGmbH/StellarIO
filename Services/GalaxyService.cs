@@ -10,6 +10,7 @@ namespace StellarIO.Services
         {
             return galaxies.Select(g => new GalaxyViewModel
             {
+                Id = g.Id,
                 Name = g.Name,
                 Systems = g.Systems.Select(s => new GalaxySystemViewModel
                 {
@@ -36,11 +37,26 @@ namespace StellarIO.Services
             _logger = logger;
         }
 
-        public virtual IEnumerable<Galaxy> GetGalaxies()
+        public virtual IEnumerable<Galaxy> GetGalaxiesFull()
         {
             return _context.Galaxies
                 .Include(g => g.Systems)
                 .ThenInclude(s => s.Planets);
+        }
+
+        public virtual IEnumerable<Galaxy> GetGalaxies()
+        {
+            return _context.Galaxies;
+        }
+
+        public virtual IEnumerable<GalaxySystem> GetSystems()
+        {
+            return _context.GalaxySystems;
+        }
+
+        public virtual IEnumerable<GalaxySystem> GetSystems(int galaxyId)
+        {
+            return GetSystems().Where(s => s.GalaxyId == galaxyId);
         }
 
     }

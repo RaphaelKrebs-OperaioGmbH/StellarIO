@@ -1,64 +1,67 @@
-﻿@model GalaxyViewModel
-
-<link rel="stylesheet" href="~/css/galaxy.css" />
-
-<h2>@Model.Name</h2>
-
-<div id="system-container" class="system-container">
-    <!-- System content will be dynamically loaded here -->
-</div>
-
-<div class="navigation-buttons">
-    <button onclick="previousSystem()">Previous</button>
-    <button onclick="nextSystem()">Next</button>
-</div>
-
-<div id="planet-details" style="display:none;">
-    <h3 id="planet-name"></h3>
-    <p>Owner: <span id="planet-owner"></span></p>
-    <p>Coordinates: <span id="planet-coordinates"></span></p>
-</div>
-
-@section Scripts {
-    <script>
-        var systems = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Systems));
-        var currentIndex = 0;
-
-        function loadSystem(index) {
-            var system = systems[index];
-            var systemContainer = document.getElementById('system-container');
-            systemContainer.innerHTML = `
-                <h3>System ${system.Id}</h3>
-                <div class="orbit">
-                    <div class="sun"></div>
-                    ${system.Planets.map((planet, i) => `
-                        <div class="planet" onclick="showPlanetDetails('${planet.Name}', '${planet.Owner}', '${planet.Coordinates}')" 
-                            style="transform: translate(-50%, -50%) rotate(${i * (360 / system.Planets.length)}deg) translate(150px) rotate(-${i * (360 / system.Planets.length)}deg);">
-                            <span>${planet.Name}</span>
-                        </div>
-                    `).join('')}
+﻿<div class="galaxy-container" ng-controller="galaxyController">
+    <div class="galaxy-controls">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="systemDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                System {{currentSystem.id}}
+            </button>
+            <ul class="dropdown-menu bg-border-gradient-1" aria-labelledby="systemDropdownMenuButton">
+                <li><a class="dropdown-item" ng-repeat="system in currentGalaxy.systems" ng-click="selectSystem(system)" ng-class="{'active': system.id === currentSystem.id}" href="#">System {{system.id}}</a></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="galaxyDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                {{currentGalaxy.name}}
+            </button>
+            <ul class="dropdown-menu bg-border-gradient-1" aria-labelledby="galaxyDropdownMenuButton">
+                <li><a class="dropdown-item" ng-repeat="galaxy in galaxies" ng-click="selectGalaxy(galaxy)" ng-class="{'active': galaxy.id === currentGalaxy.id}" href="#">{{galaxy.name}}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="galaxy-system">
+        <div class="galaxy-orbit" ng-repeat="planet in currentSystem.planets" index="$index" count="currentSystem.planets.length">
+            <div class="galaxy-planet" ng-click="selectPlanet(planet)" data-bs-toggle="modal" data-bs-target="#selectedPlanetModal">
+                <div class="galaxy-planet-img-container">
+                    <img ng-src="{{getPlanetImgSrc(planet)}}" style="{{getPlanetImgStyle(planet)}}" />
                 </div>
-            `;
-        }
+            </div>
+        </div>
+        <div class="galaxy-sun">
+        </div>
+        <button class="carousel-control-prev" type="button" ng-click="previousSystem()">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" ng-click="nextSystem()">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 
-        function previousSystem() {
-            currentIndex = (currentIndex - 1 + systems.length) % systems.length;
-            loadSystem(currentIndex);
-        }
 
-        function nextSystem() {
-            currentIndex = (currentIndex + 1) % systems.length;
-            loadSystem(currentIndex);
-        }
-
-        function showPlanetDetails(name, owner, coordinates) {
-            document.getElementById('planet-name').innerText = name;
-            document.getElementById('planet-owner').innerText = owner;
-            document.getElementById('planet-coordinates').innerText = coordinates;
-            document.getElementById('planet-details').style.display = 'block';
-        }
-
-        // Initial load
-        loadSystem(currentIndex);
-    </script>
-}
+    <div class="modal fade" id="selectedPlanetModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog building-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="galaxy-planet-img-container m-4">
+                        <img ng-src="{{getPlanetImgSrc(selectedPlanet)}}" style="{{getPlanetImgStyle(selectedPlanet)}}" />
+                    </div>
+                    <div class="header-content">
+                        <h5 class="modal-title text-light">{{selectedPlanet.name}}</h5>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p class="heading-text-secondary">Coordinates</p>
+                    <p class="text-lowlight">{{selectedPlanet.coordinates}}</p>
+                    <p class="heading-text-secondary">Owner</p>
+                    <p class="text-lowlight">{{selectedPlanet.owner}}</p>
+                </div>
+                <div class="modal-footer">
+                    <span>&nbsp;</span>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                        Ok
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

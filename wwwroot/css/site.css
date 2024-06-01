@@ -1,3 +1,27 @@
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: linear-gradient(#131014, #29282d, #121014);
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border: 1px solid transparent;
+    background: linear-gradient(rgba(10, 15, 20, 0.7), rgba(10, 20, 15, 0.6), rgba(20, 10, 15, 0.7)) padding-box, linear-gradient(95deg, rgba(0,0,139,0.8), rgba(153, 50, 204, 0.8)) border-box;
+    border-radius: 5px;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        border: 1px solid transparent;
+        background: linear-gradient(rgba(10, 15, 20, 0.5), rgba(10, 20, 15, 0.4), rgba(20, 10, 15, 0.5)) padding-box, linear-gradient(95deg, rgba(0,0,139,1), rgba(153, 50, 204, 1)) border-box;
+    }
+
 html {
   font-size: 16px;
 }
@@ -140,7 +164,6 @@ body {
         border-radius: 5px;
         border-top-right-radius: 24px;
         border-bottom-right-radius: 24px;
-        padding: 1rem;
     }
 
 .page-loading-indicator {
@@ -156,7 +179,8 @@ body {
 .dashboard {
     display: flex;
     position: relative;
-    min-height: 100%
+    min-height: 100%;
+    padding: 1rem;
 }
 .dashboard.showing-planet .planet-list {
     width: 0px;
@@ -473,4 +497,120 @@ html {
     .planet-img-container .planet-img {
         height: 100%;
         width: auto;
+    }
+
+.galaxy-container {
+    width: 100%;
+    min-height: 400px;
+    height: calc(100dvh - 5rem);
+    overflow: hidden;
+    position: relative;
+}
+.galaxy-system {
+    height: 100%;
+    position: relative;
+    /*border: 1px solid transparent;
+    background: linear-gradient(rgba(10, 15, 20, 0.95), rgba(10, 20, 15, 0.8), rgba(20, 10, 15, 0.95)) padding-box, linear-gradient(-95deg, rgba(0,0,139,0.3), rgba(153, 50, 204, 0.3)) border-box;*/
+}
+
+.galaxy-orbit {
+    height: 100%;
+    border-radius: 50%;
+    position: absolute;
+    margin: auto;
+    left: -80%;
+    right: 0;
+    top: -80%;
+    bottom: 0;
+    border: 2px solid transparent;
+    background: linear-gradient(rgba(10, 15, 20, 0.95), rgba(10, 20, 15, 0.8), rgba(20, 10, 15, 0.95)) padding-box, linear-gradient(48deg, rgba(0, 0, 139, 0.6), rgba(153, 50, 204, 0.6)) border-box;
+}
+
+.galaxy-sun {
+    position: absolute;
+    background-color: yellow;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    left: -80%;
+    right: 0;
+    top: -80%;
+    bottom: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    align-content: center;
+    background: radial-gradient(transparent 33%, rgba(10, 20, 15, 0.8), rgba(20, 10, 15, 0.95)) padding-box,url("../img/galaxy/sun.gif") center/cover;
+}
+
+.galaxy-sun img{
+    width: auto;
+    height: 100%
+}
+
+.galaxy-planet {
+    background: radial-gradient(rgba(150, 150, 250, 0.3) 65%, transparent 80%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    padding: 4px;
+    cursor: pointer;
+}
+
+    .galaxy-planet:hover {
+        background: radial-gradient(rgba(153, 50, 204, 0.8) 60%, transparent 80%);
+    }
+
+.galaxy-planet-img-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow:hidden;
+}
+
+    .galaxy-planet img {
+        height: 100%;
+        width: auto;
+    }
+
+.galaxy-container .carousel-control-next, .galaxy-container .carousel-control-prev {
+    width: 45px;
+}
+
+.galaxy-container .galaxy-controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+}
+
+.galaxy-container .galaxy-controls .dropdown .dropdown-menu {
+    max-height: calc(100dvh - 160px);
+    overflow: auto;
+}
+
+.dropdown-menu {
+    color: white;
+    border: 1px solid transparent;
+    background: linear-gradient(rgba(10, 15, 20, 0.95), rgba(10, 20, 15, 0.8), rgba(20, 10, 15, 0.95)) padding-box, linear-gradient(-95deg, rgba(0,0,139,0.3), rgba(153, 50, 204, 0.3)) border-box;
+}
+
+.dropdown-item {
+    color: rgb(128, 135, 143);
+}
+
+    .dropdown-item:hover {
+        color: white;
+        background: linear-gradient(rgba(10, 15, 20, 0.5), rgba(10, 20, 15, 0.4), rgba(20, 10, 15, 0.5)) padding-box, linear-gradient(-95deg, rgba(0,0,139,0.5), rgba(153, 50, 204, 0.5)) border-box;
+    }
+
+    .dropdown-item:focus,
+    .dropdown-item:active,
+    .dropdown-item.active {
+        color: white;
+        background: linear-gradient(rgba(10, 15, 20, 0.5), rgba(10, 20, 15, 0.4), rgba(20, 10, 15, 0.5)) padding-box, linear-gradient(85deg, rgba(0,0,139,1), rgba(153, 50, 204, 1)) border-box;
     }
